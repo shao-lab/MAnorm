@@ -20,13 +20,17 @@ CLASSIFIERS = ["Development Status :: 3 - Alpha",
                "Topic :: Scientific/Engineering :: Bio-Informatics",
                ]
 
+with open('README.md', 'r') as fin:
+    long_description = fin.read()
+
 setup(
     name="MAnorm",
     version=__version__,
     packages=find_packages(),
     scripts={'bin/manorm'},
-    url="http://bioinfo.sibs.ac.cn/shaolab/MAnorm/MAnorm.htm",
     description="MAnorm -- A robust model for quantitative comparison of ChIP-Seq data sets, developed by Shao lab.",
+    long_description=long_description,
+    url="http://bioinfo.sibs.ac.cn/shaolab/MAnorm/MAnorm.htm",
     author="Semal",
     author_email="gzhsss2@gmail.com",
     maintainer="Hayden Sun",

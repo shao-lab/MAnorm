@@ -1,7 +1,7 @@
 """MAnorm main script for running from the command line."""
 import os
 import argparse
-from manorm import workflow
+from manorm import __version__, workflow
 
 
 def argparser_config():
@@ -9,6 +9,7 @@ def argparser_config():
     """
     description = """MAnorm -- A robust model for quantitative comparison of ChIP-Seq data sets."""
     parser = argparse.ArgumentParser(description=description, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--version', action='version', version="%(prog)s {}".format(__version__))
     group_input = parser.add_argument_group("Input File Arguments")
     group_input.add_argument("--p1", dest="peaks_file1", type=str, required=True,
                              help="Path of peaks file of sample 1. BED and MACS format are currently supported."
@@ -25,7 +26,7 @@ def argparser_config():
     group_input.add_argument("--s2", dest="shift_size2", type=int, default=100,
                              help="Reads shiftsize of sample 2.")
 
-    group_model = parser.add_argument_group("Model arguments")
+    group_model = parser.add_argument_group("Normalization Model Arguments")
     group_model.add_argument("-w", dest="width", type=int, default=1000,
                              help="Half width of the window size when calculating read densities. Each window with "
                                   "length of 2*width is centered at peak summit or midpoint. This value should match "
