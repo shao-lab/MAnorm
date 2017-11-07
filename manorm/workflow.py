@@ -1,102 +1,77 @@
 """MAnorm workflow."""
 
 import os
+from manorm.core import MAnorm
 from manorm.logger import logger
-from manorm.lib.io import *
-from manorm.lib.peaks import *
+from manorm.io import *
+from manorm.plot import ma_plot
 
 
-def main(peaks_file1, peaks_file2, reads_file1, reads_file2, shift_size1, shift_size2, peak_width, distance_cutoff,
-         random_times, overlap_dependent, m_cutoff, p_cutoff, output_all, output_name):
-    if not os.path.isdir(output_name):
-        os.mkdir(output_name)
-    if not os.path.isdir(output_name + '/' + 'output_figures'):
-        os.mkdir(output_name + '/' + 'output_figures')
-    if not os.path.isdir(output_name + '/' + 'output_filters'):
-        os.mkdir(output_name + '/' + 'output_filters')
-    if not os.path.isdir(output_name + '/' + 'output_wig_files'):
-        os.mkdir(output_name + '/' + 'output_wig_files')
-
-    peaks_name1, peaks_name2 = os.path.basename(peaks_file1), os.path.basename(peaks_file2)
-    reads_name1, reads_name2 = os.path.basename(reads_file1), os.path.basename(reads_file2)
+def main(peaks_file1, peaks_file2, reads_file1, reads_file2, shift_size1, shift_size2, peak_width, summit_dis_cutoff,
+         n_random, m_cutoff, p_cutoff, full_output, name1, name2, output_name):
+    root_dir = output_name
+    output_prefix = os.path.basename(output_name)
     logger.info("# MAnorm Arguments:")
-    logger.info("# Peaks file of sample1 = {}".format(peaks_name1))
-    logger.info("# Peaks file of sample2 = {}".format(peaks_name2))
-    logger.info("# Reads file of sample1 = {}".format(reads_file1))
-    logger.info("# Reads file of sample2 = {}".format(reads_file2))
+    if name1 and name2:
+        logger.info("# Name of sample1 = {}".format(name1))
+        logger.info("# Name of sample2 = {}".format(name2))
+    logger.info("# Peaks file of sample1 = {}".format(os.path.basename(peaks_file1)))
+    logger.info("# Peaks file of sample2 = {}".format(os.path.basename(peaks_file2)))
+    logger.info("# Reads file of sample1 = {}".format(os.path.basename(reads_file1)))
+    logger.info("# Reads file of sample2 = {}".format(os.path.basename(reads_file2)))
     logger.info("# Reads shift size of sample1 = {}".format(shift_size1))
     logger.info("# Reads shift size of sample2 = {}".format(shift_size2))
-    logger.info("# Peak half width = {}".format(peak_width))
-    logger.info("# Output folder = {}".format(output_name))
+    logger.info("# Peak width to extend from summit = {}".format(peak_width))
+    logger.info("# Summit-to-summit distance cutoff = {}".format(summit_dis_cutoff))
+    logger.info("# Output directory = {}".format(root_dir))
 
-    peaks_name1 = os.path.splitext(peaks_name1)[0]
-    peaks_name2 = os.path.splitext(peaks_name2)[0]
-    reads_name1 = os.path.splitext(reads_name1)[0]
-    reads_name2 = os.path.splitext(reads_name2)[0]
+    mk_dir(root_dir)
+    ma = MAnorm(name1, name2, root_dir, output_prefix)
 
-    logger.info("Step1: Loading input data...")
-    peaks1, peaks2 = read_peaks(peaks_file1), read_peaks(peaks_file2)
-    reads1, reads2 = read_reads(reads_file1, shift_size1), read_reads(reads_file2, shift_size2)
+    logger.info("Step1: Loading input data")
+    ma.load_peaks(peaks_file1, peaks_file2)
+    ma.load_reads(reads_file1, reads_file2, shift_size1, shift_size2)
 
-    logger.info("Step2: Classifying peaks by overlap...")
-    peaks1_unique, peaks1_common, peaks2_unique, peaks2_common = get_common_peaks(peaks1, peaks2)
-    logger.info(
-        "{}: {}(unique) {}(common)".format(peaks_name1, get_peaks_size(peaks1_unique), get_peaks_size(peaks1_common)))
-    logger.info(
-        "{}: {}(unique) {}(common)".format(peaks_name2, get_peaks_size(peaks2_unique), get_peaks_size(peaks2_common)))
-    logger.info("Performing overlap enrichment test...")
-    fold_change = []
-    for _ in range(random_times):
-        tmp_peaks_random = randomize_peaks(peaks2)
-        tmp_peaks_common = get_common_peaks(peaks1, tmp_peaks_random)[1]
-        try:
-            fold_change.append(1.0 * get_peaks_size(peaks1_common) / get_peaks_size(tmp_peaks_common))
-        except ZeroDivisionError:
-            fold_change.append(1.0 * get_peaks_size(peaks1_common))
-    logger.info("Enrichment of peaks overlap: Fold Change: mean={0:f}, std={1:f}".format(np.array(fold_change).mean(),
-                                                                                         np.array(fold_change).std()))
+    logger.info("Step2: Classifying peaks by overlap")
+    ma.classify_peaks_by_overlap()
+    ma.merge_common_peaks()
+    unique_num1 = ma.peaks1.count_peak_type("unique")
+    common_num1 = ma.peaks1.count_peak_type("common")
+    unique_num2 = ma.peaks2.count_peak_type("unique")
+    common_num2 = ma.peaks2.count_peak_type("common")
+    logger.info("{}: {}(unique) {}(common)".format(ma.peaks1.name, unique_num1, common_num1))
+    logger.info("{}: {}(unique) {}(common)".format(ma.peaks2.name, unique_num2, common_num2))
+    logger.info("Merged common peaks: {}".format(ma.common_peaks.size))
 
-    logger.info("Step3: Merging common peaks...")
-    merged_peaks, summit_dis = merge_common_peaks(peaks1_common, peaks2_common)
-    logger.info("Merged common peaks: {}".format(get_peaks_size(merged_peaks)))
+    logger.info("Step3: Performing overlap enrichment test")
+    random_overlap_num, fold_change = ma.overlap_enrichment_test(n_random)
+    logger.info("Overlapping peaks in random simulation: mean:{} std:{}".format(random_overlap_num.mean(),
+                                                                                random_overlap_num.std()))
+    logger.info("Fold Change: {}".format(fold_change.mean()))
 
-    logger.info("Step4: Calculating read density of each peak...")
-    cal_peaks_read_density(peaks1, reads1, reads2, peak_width)
-    cal_peaks_read_density(peaks2, reads1, reads2, peak_width)
-    cal_peaks_read_density(merged_peaks, reads1, reads2, peak_width)
+    logger.info("Step4: Calculating the read densities")
+    ma.cal_read_density(peak_width)
 
-    logger.info("Step5: Fitting normalization model...")
-    ma_fit = use_merged_peaks_fit_model(merged_peaks, summit_dis, distance_cutoff)
-    if ma_fit[0] >= 0:
-        logger.info("Normalization model: M = {0:f} * A + {1:f}".format(ma_fit[1], ma_fit[0]))
+    logger.info("Step5: Fitting normalization model")
+    ma.fit_model(summit_dis_cutoff)
+    ma_params = ma.ma_model
+    if ma_params[0] >= 0:
+        logger.info("M-A model: M = {0:f} * A + {1:f}".format(ma_params[1], ma_params[0]))
     else:
-        logger.info("Normalization model: M = {0:f} * A - {1:f}".format(ma_fit[1], abs(ma_fit[0])))
+        logger.info("M-A model: M = {0:f} * A - {1:f}".format(ma_params[1], abs(ma_params[0])))
 
-    logger.info("Step6: Normalizing all peaks...")
-    normalize_peaks(peaks1, ma_fit)
-    normalize_peaks(peaks2, ma_fit)
-    normalize_peaks(merged_peaks, ma_fit)
+    logger.info("Step6: Normalizing all peaks")
+    ma.normalize()
 
-    logger.info("Step7: Output results...")
-    if output_all:
-        output_normalized_peaks(peaks1_unique, peaks1_common, output_name + '/' + peaks_name1 + '_MAvalues.xls',
-                                reads_name1, reads_name2)
-        output_normalized_peaks(peaks2_unique, peaks2_common, output_name + '/' + peaks_name2 + '_MAvalues.xls',
-                                reads_name1, reads_name2)
-    output_3set_normalized_peaks(peaks1_unique, merged_peaks, peaks2_unique,
-                                 output_name + '/' + output_name + '_all_peaks_MAvalues.xls',
-                                 peaks_name1, peaks_name2, reads_name1, reads_name2)
-
-    draw_figs_to_show_data(output_name + '/' + 'output_figures', peaks1_unique, peaks2_unique, merged_peaks,
-                           peaks_name1, peaks_name2, ma_fit, reads_name1, reads_name2)
-    output_peaks_mvalue_2wig_file(output_name + '/' + 'output_wig_files', peaks1_unique, peaks2_unique, merged_peaks,
-                                  output_name)
-    unbiased_mvalue = m_cutoff
-    output_unbiased_peaks(output_name + '/' + 'output_filters', peaks1_unique, peaks2_unique, merged_peaks,
-                          unbiased_mvalue, overlap_dependent)
-    output_biased_peaks(output_name + '/' + 'output_filters', peaks1_unique, peaks2_unique, merged_peaks, m_cutoff,
-                        p_cutoff, overlap_dependent)
-
-
-if __name__ == '__main__':
-    pass
+    logger.info("Step7: Output results")
+    if full_output:
+        output_original_peaks(ma)
+    output_all_peaks(ma)
+    output_wiggle_track(ma)
+    unbiased_num = output_unbiased_peaks(ma, m_cutoff)
+    logger.info("{} peaks with |M_value|<{} are filtered as unbiased peaks".format(unbiased_num, abs(m_cutoff)))
+    biased_num1, biased_num2 = output_biased_peaks(ma, m_cutoff, p_cutoff)
+    logger.info("{} peaks with M_value>={} are filtered as sample1-biased peaks".format(biased_num1, abs(m_cutoff)))
+    logger.info("{} peaks with M_value<=-{} are filtered as sample2-biased peaks".format(biased_num2, abs(m_cutoff)))
+    ma_plot(ma)
+    logger.info("Finished!")
