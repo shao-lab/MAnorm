@@ -53,7 +53,7 @@ setup(
     packages=find_packages(exclude=["test"]),
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
-    url="http://bioinfo.sibs.ac.cn/shaolab/MAnorm/MAnorm.htm",
+    url="https://github.com/shao-lab/MAnorm",
     author="Semal",
     author_email="",
     maintainer="Hayden Sun",
