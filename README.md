@@ -1,4 +1,7 @@
 ﻿# MAnorm
+[![pypi](https://img.shields.io/pypi/v/MAnorm.svg)](https://pypi.python.org/pypi/MAnorm)
+[![](https://img.shields.io/pypi/l/MAnorm.svg)](https://github.com/shao-lab/MAnorm/blob/master/LICENSE)
+
 ## Introduction
 
 ChIP-Seq is widely used to characterize genome-wide binding patterns of transcription factors and other chromatin-associated proteins. Although comparison of ChIP-Seq data sets is critical for understanding cell type-dependent and cell state-specific binding, and thus the study of cell-specific gene regulation, few quantitative approaches have been developed.
