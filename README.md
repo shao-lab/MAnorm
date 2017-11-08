@@ -1,7 +1,8 @@
 ﻿# MAnorm
+[![travis-ci](https://travis-ci.org/shao-lab/MAnorm.svg?branch=master)](https://travis-ci.org/shao-lab/MAnorm)
 [![pypi](https://img.shields.io/pypi/v/MAnorm.svg)](https://pypi.python.org/pypi/MAnorm)
-[![license](https://img.shields.io/pypi/l/MAnorm.svg)](https://github.com/shao-lab/MAnorm/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/manorm/badge/?version=latest)](http://manorm.readthedocs.io/en/latest/?badge=latest)
+[![license](https://img.shields.io/pypi/l/MAnorm.svg)](https://github.com/shao-lab/MAnorm/blob/master/LICENSE)
 
 ## Introduction
 
