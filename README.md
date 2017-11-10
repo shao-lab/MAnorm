@@ -29,7 +29,9 @@ pip install manorm
 ```
 Or you can install MAnorm via conda:
 
-In preparation.
+```
+conda install -c bioconda manorm
+```
 
 ## Usage
 manorm [-h] [-v] --p1 peaks_file1 --p2 peaks_file2 --r1 reads_file1 --r2 reads_file2 -o output_name
