@@ -24,10 +24,10 @@ Features
 --------
 
 - Quantitatively compare ChIP-Seq samples
-- Evaluate the enrichment of peaks overlap compared to random
-- Robust linear regression on common peaks for normalization
+- Evaluate the overlap enrichment of protein binding sites compared to random
+- Robust linear regression on common protein binding sites(peaks) for normalization
 - The normalized *M-value* could serve as a quantitative measure of the differential binding
-- Reflect authentic biological differences between samples under comparison
+- Reflect authentic biological differences
 - Support multiple format of sequencing reads
 
 
