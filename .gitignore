@@ -1,0 +1,4 @@
+.idea/
+docs/build/
+dist/
+test/test_manorm.py
