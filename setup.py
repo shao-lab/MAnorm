@@ -28,8 +28,8 @@ With the accumulation of ChIP-seq data sets, MAnorm should serve as a powerful t
 comprehensive understanding of cell type-specific and cell state-specific regulation during organism development and 
 disease onset. 
 
-**Citation** MAnorm: a robust model for quantitative comparison of ChIP-Seq data sets. Shao Z, Zhang Y, Yuan GC, Orkin SH, Waxman DJ. Genome Biol. Mar 16;13(3):R16. 
-
+**Citation** MAnorm: a robust model for quantitative comparison of ChIP-Seq data sets. Shao Z, Zhang Y, Yuan GC, 
+Orkin SH, Waxman DJ. Genome Biol. Mar 16;13(3):R16. 
 
 """
 
