@@ -159,9 +159,9 @@ def output_biased_peaks(ma, m_cutoff, p_cutoff):
 
     num1, num2 = 0, 0
     file_name1 = os.path.join(ma.root_dir, "output_filters",
-                              ma.peaks1.name + "_M>={}_biased_peaks.bed".format(abs(m_cutoff)))
+                              ma.peaks1.name + "_M_above_{}_biased_peaks.bed".format(abs(m_cutoff)))
     file_name2 = os.path.join(ma.root_dir, "output_filters",
-                              ma.peaks1.name + "_M<=-{}_biased_peaks.bed".format(abs(m_cutoff)))
+                              ma.peaks1.name + "_M_below_-{}_biased_peaks.bed".format(abs(m_cutoff)))
     with open(file_name1, "w") as fout1, open(file_name2, "w") as fout2:
         for chrom in peaks:
             for peak in peaks[chrom]:
