@@ -1,10 +1,11 @@
 import os
 import shutil
+import manorm
 from manorm import workflow
 
 
 def setup():
-    data_dir = os.path.join('manorm', 'tests', 'data')
+    data_dir = os.path.join(os.path.dirname(os.path.abspath(manorm.__file__)), 'tests', 'data')
     os.chdir(data_dir)
 
 
