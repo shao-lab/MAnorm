@@ -1,16 +1,27 @@
 ChangeLog
 =========
 
-v1.1 (2017-11-7)
+v1.1.1 (2018-01-11)
+------------------
+
+* Add test module
+
+Bugs fixed:
+
+* Rename the file name of filtered biased peaks
+
+
+
+v1.1 (2017-11-07)
 ----------------
 
 Improvements:
 
-* refactor the package for better performance and compatibility
+* Refactor the package for better performance and compatibility
 
-Bug fixes:
+Bugs fixed:
 
-* fix the coordinates of peaks to be consistent with the corresponding coordinate system
-* fix the approximate equation in p-value calculation
-* fix the summit calculation of merged common peaks
+* Fix the coordinates of peaks to be consistent with the corresponding coordinate system
+* Fix the approximate equation in p-value calculation
+* Fix the summit calculation of merged common peaks
  
