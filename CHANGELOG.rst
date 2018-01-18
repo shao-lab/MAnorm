@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+v1.1.2 (2018-01-18)
+------------------
+
+* Keep five digits for floats in the output files
+
+* Fix a typo
+
+
 v1.1.1 (2018-01-11)
 ------------------
 
