@@ -31,7 +31,7 @@ def argparser_config():
     model_args = parser.add_argument_group("Normalization Model Arguments")
     model_args.add_argument("-w", dest="width", type=int, default=1000,
                             help="Width of the window to calculate read densities. Windows with unified length of "
-                                 "2*width centered at peak summit/midpoint are used to qualify the binding signal. "
+                                 "2*width centered at peak summit/midpoint are used to quantify the binding signal. "
                                  "This should match the typical length of peaks, a value of 1000 is recommended for "
                                  "sharp histone marks like H3K4me3 and H3K9/27ac, and 500 for transcription factors "
                                  "or DNase-Seq.")
