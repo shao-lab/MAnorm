@@ -163,17 +163,17 @@ class Peak(object):
             if x + y < 20:
                 p_value = _combination(x + y, x) * 2 ** - (x + y + 1)
             else:  # if x + y is large, use the log-transform to calculate p-value
-                log_p = _log_factorial(x+y) - _log_factorial(x) - _log_factorial(y) - (x + y + 1) * log(2)
+                log_p = _log_factorial(x + y) - _log_factorial(x) - _log_factorial(y) - (x + y + 1) * log(2)
                 # log_p = (x + y) * log(x + y) - x * log(x) - y * log(y) - (x + y + 1) * log(2)
                 if log_p < -500:
                     log_p = -500
                 p_value = exp(log_p)
             return p_value
 
-        self.normed_m_value = self.m_value - (ma_model[0] + ma_model[1] * self.a_value)
-        self.normed_a_value = self.a_value
-        self.normed_read_density1 = 2 ** (self.normed_a_value + self.normed_m_value / 2)
-        self.normed_read_density2 = 2 ** (self.normed_a_value - self.normed_m_value / 2)
+        self.normed_m_value = round(self.m_value - (ma_model[0] + ma_model[1] * self.a_value), 5)
+        self.normed_a_value = round(self.a_value, 5)
+        self.normed_read_density1 = round(2 ** (self.normed_a_value + self.normed_m_value / 2), 5)
+        self.normed_read_density2 = round(2 ** (self.normed_a_value - self.normed_m_value / 2), 5)
         self.p_value = _cal_p_value(self.normed_read_density1, self.normed_read_density2)
 
 
