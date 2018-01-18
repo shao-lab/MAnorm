@@ -55,7 +55,7 @@ def argparser_config():
     output_args.add_argument("-s", dest="full_output", action="store_true", default=False,
                              help="By default, MAnorm will write the comparison results of unique and merged common "
                                   "peaks in a single output file. With this option on, two extra files which contains "
-                                  "the results of the original(unmerged) peaks will also be output.")
+                                  "the results of the original(unmerged) peaks will also be outputted.")
     output_args.add_argument("--name1", dest="name1", type=str, default=None,
                              help="Name (experiment condition/cell-type etc.) of sample1. If specified, it will be "
                                   "used to replace the peaks/reads input file name as the sample name in output files.")
