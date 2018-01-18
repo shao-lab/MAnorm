@@ -1,8 +1,15 @@
 ChangeLog
 =========
 
+v1.1.3 (2018-01-19)
+-------------------
+
+* Fix a bug in the file name of filtered biased peaks
+
+* Fix a typo
+
 v1.1.2 (2018-01-18)
-------------------
+-------------------
 
 * Keep five digits for floats in the output files
 
@@ -10,7 +17,7 @@ v1.1.2 (2018-01-18)
 
 
 v1.1.1 (2018-01-11)
-------------------
+-------------------
 
 * Add test module
 
@@ -21,7 +28,7 @@ Bugs fixed:
 
 
 v1.1 (2017-11-07)
-----------------
+-----------------
 
 Improvements:
 
