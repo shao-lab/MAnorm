@@ -1,0 +1,132 @@
+<tool id="manorm" name="MAnorm" version="1.0">
+    <description>Quantitative comparison of ChIP-Seq samples</description>
+    <requirements>
+        <requirement type="package" version="1.1.2">manorm</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        manorm --p1 $p1 --p2 $p2 --r1 $r1 --r2 $r2 $s --name1 sample1 --name2 sample2 -o output_dir
+        #if $s1
+            --s1 $s1
+        #end if
+
+        #if $s2
+            --s2 $s2
+        #end if
+
+        #if $settings.advanced == "on"
+            #if $settings.w
+                -w $settings.w
+            #end if
+
+            #if $settings.d
+                -d $settings.d
+            #end if
+
+            #if $settings.n
+                -n $settings.n
+            #end if
+        #end if
+
+        #if $m
+            -m $m
+        #end if
+
+        #if $p
+            -p $p
+        #end if
+    ]]></command>
+    <inputs>
+        <param argument="--p1" type="data" format="tabular,bed" label="Peaks file of sample 1" />
+        <param argument="--p2" type="data" format="tabular,bed" label="Peaks file of sample 2" />
+        <param argument="--r1" type="data" format="bed" label="Reads file of sample 1" />
+        <param argument="--r2" type="data" format="bed" label="Reads file of sample 2" />
+        <param argument="--s1" type="integer" value="100" optional="true" label="Reads shift size of sample 1"
+               help="This value is used to shift reads towards 3' direction to determine the precise binding site. Set as half of the fragment length." />
+        <param argument="--s2" type="integer" value="100" optional="true" label="Reads shift size of sample 2"
+               help="Same as 'Reads shift size of sample 1'" />
+        <param argument="-m" type="float" value="1.0" optional="true" label="M-value (log2 fold change) cutoff" />
+        <param argument="-p" type="float" value="0.01" optional="true" label="P-value cutoff" />
+        <conditional name="settings">
+            <param name="advanced" type="select" label="Show advanced options">
+                <option value="on">Yes, show advanced options.</option>
+                <option value="off" selected="true">No</option>
+            </param>
+            <when value="on">
+                <param argument="-w" type="integer" value="1000" optional="true" label="Width of the window to calculate read densities"
+                       help="Windows with unified length of 2*width centered at peak summit/midpoint are used to quantify the binding signal.
+                       This should match the typical length of peaks, a value of 1000 is recommended for sharp histone marks like H3K4me3 and H3K9/27ac,
+                       and 500 for transcription factors or DNase-Seq." />
+                <param argument="-d" type="integer" value="500" optional="true" label="Summit-to-summit distance cutoff for common peaks"
+                       help="Only overlapped peaks with summit-to-summit distance less than than this value are considered as real common peaks of two samples when fitting M-A normalization model." />
+                <param argument="-n" type="integer" value="10" optional="true" label="Number of simulation to test the enrichment of peak overlap between two samples" />
+            </when>
+            <when value="off">
+            </when>
+        </conditional>
+        <param argument="-s" type="boolean" truevalue="-s" falsevalue="" optional="true" label="Full output"
+               help="By default, MAnorm will write the comparison results of unique and merged common peaks in a single output file.
+               With this option on, two extra files which contains the results of the original(unmerged) peaks will also be outputted." />
+    </inputs>
+    <outputs>
+        <data name="main_output" format="tabular" label="MAnorm (main result)" from_work_dir="output_dir/sample1_vs_sample2_all_MAvalues.xls" />
+        <data name="sample1_output" format="tabular" label="MAnorm (sample1 result)" from_work_dir="output_dir/sample1_MAvalues.xls">
+            <filter>s == True</filter>
+        </data>
+        <data name="sample2_output" format="tabular" label="MAnorm (sample2 result)" from_work_dir="output_dir/sample2_MAvalues.xls">
+            <filter>s == True</filter>
+        </data>
+        <data name="sample1_biased_peaks" format="bed" label="MAnorm (sample1 biased peaks)" from_work_dir="output_dir/output_filters/sample1_M_above_*_biased_peaks.bed" />
+        <data name="sample2_biased_peaks" format="bed" label="MAnorm (sample2 biased peaks)" from_work_dir="output_dir/output_filters/sample1_M_below_*_biased_peaks.bed" />
+        <data name="unbiased_peaks" format="bed" label="MAnorm (unbiased peaks)" from_work_dir="output_dir/output_filters/sample1_vs_sample2_unbiased_peaks.bed" />
+        <data name="m_value_track" format="wig" label="MAnorm (M values track)" from_work_dir="output_dir/output_tracks/sample1_vs_sample2_M_values.wig" />
+        <data name="a_value_track" format="wig" label="MAnorm (A values track)" from_work_dir="output_dir/output_tracks/sample1_vs_sample2_A_values.wig" />
+        <data name="p_value_track" format="wig" label="MAnorm (P values track)" from_work_dir="output_dir/output_tracks/sample1_vs_sample2_P_values.wig" />
+        <data name="ma_plot_before" format="png" label="MAnorm (MA plot before normalization)" from_work_dir="output_dir/output_figures/sample1_vs_sample2_MA_plot_before_normalization.png" />
+        <data name="ma_plot_after" format="png" label="MAnorm (MA plot after normalization)" from_work_dir="output_dir/output_figures/sample1_vs_sample2_MA_plot_after_normalization.png" />
+        <data name="ma_plot_with_p_value" format="png" label="MAnorm (MA plot with P values)" from_work_dir="output_dir/output_figures/sample1_vs_sample2_MA_plot_with_P-value.png" />
+        <data name="read_density_plot" format="png" label="MAnorm (Read density plot)" from_work_dir="output_dir/output_figures/sample1_vs_sample2_read_density_on_common_peaks.png" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="p1" value="H1hescH3k4me3Rep1_peaks.xls" ftype="tabular" />
+            <param name="p2" value="K562H3k4me3Rep1_peaks.xls" ftype="tabular" />
+            <param name="r1" value="H1hescH3k4me3Rep1_reads.bed" ftype="bed" />
+            <param name="r2" value="K562H3k4me3Rep1_reads.bed" ftype="bed" />
+            <param name="s1" value="100" />
+            <param name="s2" value="100" />
+            <output name="main_output" file="H1_vs_K562_H3K4me3_all_MAvalues.xls"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+What it does?
+-------------
+
+MAnorm is a robust model for quantitative comparison of ChIP-Seq data sets. It uses the common peaks between two samples
+to fit a rescaling model for normalization and infers the binding difference in all peak regions.
+
+Workflow of MAnorm:
+    - Classify peaks from given samples into unique/common peaks
+    - Take common peaks to fit a robust linear model to reflect the rescaling relationship between two samples
+    - Normalize all peaks with the fitted model
+    - Infer differential binding events by M-value (log2 fold change)
+
+
+Documentation
+-------------
+To see the full documentation of MAnorm, please refer to: http://manorm.readthedocs.io/en/latest/
+
+
+Links
+-----
+The Python version of MAnorm is developed by ShaoLab_ at `CAS-MPG Partner Institute for Computational Biology, SIBS, CAS`_.
+
+GitHub: https://github.com/shao-lab/MAnorm
+
+.. _ShaoLab: http://bioinfo.sibs.ac.cn/shaolab/
+.. _CAS-MPG Partner Institute for Computational Biology, SIBS, CAS: http://www.picb.ac.cn/picb/indexeng.jsp
+
+    ]]></help>
+    <citations>
+        <citation type="doi">10.1186/gb-2012-13-3-r16</citation>
+    </citations>
+</tool>
