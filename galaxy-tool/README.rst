@@ -21,7 +21,7 @@ regulators.
 Installation
 ------------
 
-Please search and install MAnorm galaxy tool via the `Galaxy Tool Shed`.
+Please search and install MAnorm galaxy tool via the `Galaxy Tool Shed`_.
 
 .. _`Galaxy Tool Shed`: https://toolshed.g2.bx.psu.edu/view/haydensun/manorm
 
