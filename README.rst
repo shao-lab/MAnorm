@@ -68,6 +68,15 @@ You can clone the repo and execute the following command under source directory:
 
     $ python setup.py install
 
+Galaxy Installation
+-------------------
+MAnorm is available on Galaxy_, you can incorporate MAnorm into your own Galaxy instance.
+
+Please search and install MAnorm via the `Galaxy Tool Shed`_.
+
+.. _Galaxy: https://galaxyproject.org
+.. _`Galaxy Tool Shed`: https://toolshed.g2.bx.psu.edu/view/haydensun/manorm
+
 Usage
 -----
 

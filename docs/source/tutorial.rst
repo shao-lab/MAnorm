@@ -69,6 +69,15 @@ Then, install MAnorm in the source directory::
    * You may need to install all dependencies listed in ``requirements.txt``.
    * You may need to modify ``$PATH`` and ``$PYTHONPATH`` manually to make it work.
 
+Galaxy Installation
+-------------------
+MAnorm is available on Galaxy_, you can incorporate MAnorm into your own Galaxy instance.
+
+Please search and install MAnorm via the `Galaxy Tool Shed`_.
+
+.. _Galaxy: https://galaxyproject.org
+.. _`Galaxy Tool Shed`: https://toolshed.g2.bx.psu.edu/view/haydensun/manorm
+
 Usage of MAnorm
 ===============
 
