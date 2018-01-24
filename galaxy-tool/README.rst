@@ -31,6 +31,7 @@ To see the full documentation of MAnorm, please refer to: http://manorm.readthed
 
 ChangeLog
 ---------
+- v1.0.1: Fix an incorrect file name, related to MAnorm-v1.1.3
 - v1.0: Initial release, related to MAnorm-v1.1.2
 
 
