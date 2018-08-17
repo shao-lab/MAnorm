@@ -9,7 +9,8 @@ with open('README.rst') as fin:
 
 INSTALL_REQUIRES = ["numpy",
                     "matplotlib",
-                    "statsmodels"]
+                    "statsmodels",
+                    "scipy"]
 
 CLASSIFIERS = ["Development Status :: 5 - Production/Stable",
                "Environment :: Console",
