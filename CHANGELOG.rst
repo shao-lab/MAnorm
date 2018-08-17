@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+v1.1.4 (2018-08-17)
+-------------------
+
+* Fix an issue in setting matplotlib backend
+
 v1.1.3 (2018-01-19)
 -------------------
 
@@ -39,4 +44,3 @@ Bugs fixed:
 * Fix the coordinates of peaks to be consistent with the corresponding coordinate system
 * Fix the approximate equation in p-value calculation
 * Fix the summit calculation of merged common peaks
- 
