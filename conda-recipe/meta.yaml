@@ -3,7 +3,6 @@ package:
   version: 1.1.4
 
 source:
-  fn: MAnorm-1.1.4.tar.gz
   url: https://files.pythonhosted.org/packages/25/ba/83cc20feb4cae2e9838c17841e00cb128cfc90de73102bfbea185be15329/MAnorm-1.1.4.tar.gz
   sha256: 17504e57cff9d913ba0e3a0f57f1741d72aef5167055d46c83ad78e09ed7f638
 
