@@ -1,6 +1,9 @@
 """MAnorm workflow."""
 
 import os
+import matplotlib as mpl
+mpl.use('Agg')
+
 from manorm.core import MAnorm
 from manorm.logger import logger
 from manorm.io import *
