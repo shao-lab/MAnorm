@@ -46,8 +46,7 @@ To see the full documentation of MAnorm, please refer to: http://manorm.readthed
 Installation
 ------------
 
-The latest version release of MAnorm is available at
-`PyPI <https://pypi.python.org/pypi/MAnorm>`__:
+The latest release of MAnorm is available at `PyPI <https://pypi.python.org/pypi/MAnorm>`__:
 
 ::
 
@@ -70,6 +69,7 @@ You can clone the repo and execute the following command under source directory:
 
 Galaxy Installation
 -------------------
+
 MAnorm is available on Galaxy_, you can incorporate MAnorm into your own Galaxy instance.
 
 Please search and install MAnorm via the `Galaxy Tool Shed`_.
@@ -91,5 +91,3 @@ License
 
 `BSD 3-Clause
 License <https://github.com/shao-lab/MAnorm/blob/master/LICENSE>`__
-
-
