@@ -1,10 +1,9 @@
 include LICENSE
 include CHANGELOG.rst
-include README.md
-include requirements.txt
+include README.rst
 
 graft docs
 prune docs/build
 
-graft manorm/tests/data
-prune manorm/tests/data/demo
+graft tests/data
+prune tests/data/demo
