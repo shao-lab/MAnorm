@@ -1,12 +1,29 @@
+sudo: false
 language: python
+cache: pip
+notifications:
+  email: false
 python:
   - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+env:
+  TOXENV=py
+
+matrix:
+  include:
+    - python: 2.7
+      env: TOXENV=docs
 
 # command to install dependencies
 install:
-  - pip install -r requirements.txt
-  - python setup.py install
+  pip install -U tox
 
 # command to run tests
 script:
-  - python -m pytest manorm
+  - tox
+
+after_success:
+  - if [[ $TOXENV == "py" ]]; then tox -e codecov; fi
+

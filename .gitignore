@@ -1,5 +1,9 @@
 .idea/
+.vscode/
 docs/build/
-build
+build/
 dist/
 *.pyc
+.tox/
+.coverage
+MAnorm.egg-info/
