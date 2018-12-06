@@ -10,19 +10,29 @@ This module contains Peak and Peaks objects for peak-related operations.
 from __future__ import absolute_import, division
 
 import logging
-import random
 import os
-import numpy as np
+
+from manorm.exceptions import UnknownFormatError
+from manorm.peak.parsers import BEDParser, BEDSummitParser, MACS2Parser, MACSParser, NarrowPeakParser
 
 logger = logging.getLogger(__name__)
 
-PEAK_FORMATS = ['bed', 'macs', 'macs2', 'narrowpeak', 'broadpeak']
+PEAK_FORMATS = ['bed', 'bed-summit', 'macs', 'macs2', 'narrowpeak', 'broadpeak']
+PEAK_PARSERS = {'bed': BEDParser, 'bed-summit': BEDSummitParser, 'macs': MACSParser, 'macs2': MACS2Parser,
+                'narrowpeak': NarrowPeakParser}
 
 
 class Peak(object):
-    """A single peak."""
+    """Class for a single peak."""
 
     def __init__(self, chrom, start, end, summit=None):
+        """Initialize a peak.
+
+        :param chrom: Chromosome name.
+        :param start: Start coordinate (0-based).
+        :param end: End coordinate (0-based).
+        :param summit: Summit coordinate (0-based).
+        """
         self.chrom = chrom
         self.start = int(start)
         self.end = int(end)
@@ -49,11 +59,15 @@ class Peak(object):
 
 
 class Peaks(object):
-    """A collection of peaks.
-    Peaks are stored into a dict with chromosome names as keys and lists of :class:`Peak` as values.
+    """Class for a collection of peaks.
+    Peaks are stored by a dict under `self.data` with chromosome names as keys and lists of :class:`Peak` as values.
     """
 
     def __init__(self, name=None):
+        """Initialize the peak set.
+
+        :param name: The name of the peak set.
+        """
         self.name = name
         self.data = {}
 
@@ -76,8 +90,8 @@ class Peaks(object):
     def sort(self, by='start', ascending=True):
         """Sort peaks.
 
-        :param by: Attribute name to sort by. Defaults to ``'start'``.
-        :param ascending: Sort ascending or descending. Defaults to ``True``.
+        :param by: Attribute name to sort by. Defaults to `'start'`.
+        :param ascending: Sort ascending or descending. Defaults to `True`.
         """
         for chrom in self.data:
             self.data[chrom].sort(key=lambda x: getattr(x, by), reverse=ascending)
@@ -96,110 +110,20 @@ class Peaks(object):
         return "Peaks(name={})".format(self.name)
 
 
-def load_peaks(path, format='auto', name=None):
-    """Load peaks from file.
+def load_peaks(path, format='bed', name=None):
+    """Read peaks from file.
 
     :param path: The file path to read peaks from.
-    :param format: Format of peaks file. Defaults to ``'auto'``.
+    :param format: Format of peaks file.
     :param name: Name of peaks.
     """
-    from manorm.peak.parsers import get_peak_parser
     if name is None:
         name = os.path.splitext(os.path.basename(path))[0]
     peaks = Peaks(name=name)
-    peak_parser = get_peak_parser(path=path, format=format)
-    for peak in peak_parser.parse():
-        peaks.add(peak)
+    try:
+        peak_parser = PEAK_PARSERS[format](path)
+    except KeyError:
+        raise UnknownFormatError(format=format)
+    for chrom, start, end, summit in peak_parser.parse():
+        peaks.add(Peak(chrom=chrom, start=start, end=end, summit=summit))
     return peaks
-
-
-def overlap_on_single_chr(peaks1, peaks2):
-    overlap_flag1 = np.zeros(len(peaks1))
-    overlap_flag2 = np.zeros(len(peaks2))
-    starts = np.array([peak.start for peak in peaks2])
-    ends = np.array([peak.end for peak in peaks2])
-    for idx, peak in enumerate(peaks1):
-        product = (peak.end - starts) * (ends - peak.start)
-        overlap_idx = np.where(product > 0)[0]
-        if overlap_idx.size > 0:
-            overlap_flag1[idx] = 1
-            overlap_flag2[overlap_idx] = 1
-    return overlap_flag1, overlap_flag2
-
-
-def merge_peaks(peaks1, peaks2):
-    def _merge_summits(summits):
-        summits.sort()
-        min_dis = None
-        for idx, head in enumerate(summits[:-1]):
-            tail = summits[idx + 1]
-            if not min_dis or tail - head < min_dis:
-                summit = (head + tail) / 2
-                min_dis = tail - head
-        return summit, min_dis
-
-    merged_peaks = Peaks(name="merged_common_peaks")
-    summit_dis = defaultdict(list)
-    for chrom in set(peaks1) | set(peaks2):
-        mixed_peaks = sorted(peaks1[chrom] + peaks2[chrom], key=lambda x: x.start)
-        if len(mixed_peaks) == 0:
-            logger.warning("Mixed peaks are empty on {}".format(chrom))
-            continue
-        temp_merged_peaks = []
-        temp_summit_dis = []
-        start = mixed_peaks[0].start
-        end = mixed_peaks[0].end
-        summits = [mixed_peaks[0].summit]
-        idx = 1
-        while idx < len(mixed_peaks):
-            peak = mixed_peaks[idx]
-            if peak.start < end:
-                end = max(end, peak.end)
-                summits.append(peak.summit)
-            else:
-                summit, dis = _merge_summits(summits)
-                temp_merged_peaks.append(Peak(chrom, start, end, summit))
-                temp_summit_dis.append(dis)
-                start = peak.start
-                end = peak.end
-                summits = [peak.summit]
-            idx += 1
-        summit, dis = _merge_summits(summits)
-        temp_merged_peaks.append(Peak(chrom, start, end, summit))
-        temp_summit_dis.append(dis)
-        for peak in temp_merged_peaks:
-            peak.type = "merged_common_peaks"
-        merged_peaks.data[chrom] = temp_merged_peaks
-        summit_dis[chrom] = temp_summit_dis
-    return merged_peaks, summit_dis
-
-
-def generate_random_peaks(peaks):
-    random_peaks = Peaks(name="random")
-    for chrom in peaks:
-        temp_peaks = peaks[chrom]
-        if not temp_peaks:
-            continue
-        starts = [peak.start for peak in temp_peaks]
-        lengths = [peak.end - peak.start for peak in temp_peaks]
-        min_start = min(starts)
-        max_start = max(starts)
-        for length in lengths:
-            random_start = random.randint(min_start, max_start)
-            random_peaks.data[chrom].append(Peak(chrom, random_start, random_start + length))
-    return random_peaks
-
-
-def classify_peaks_by_overlap(peaks1, peaks2):
-    for chrom in set(self.peaks1.peaks) | set(self.peaks2.peaks):
-        overlap_flag1, overlap_flag2 = overlap_on_single_chr(self.peaks1.peaks[chrom], self.peaks2.peaks[chrom])
-        for idx, temp_flag in enumerate(overlap_flag1):
-            if temp_flag == 0:
-                self.peaks1.peaks[chrom][idx].type = self.peaks1.name + "_unique"
-            else:
-                self.peaks1.peaks[chrom][idx].type = self.peaks1.name + "_common"
-        for idx, temp_flag in enumerate(overlap_flag2):
-            if temp_flag == 0:
-                self.peaks2.peaks[chrom][idx].type = self.peaks2.name + "_unique"
-            else:
-                self.peaks2.peaks[chrom][idx].type = self.peaks2.name + "_common"
