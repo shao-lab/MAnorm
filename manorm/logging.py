@@ -1,4 +1,12 @@
-""""Logging configurations for MAnorm."""
+# -*- coding: utf-8 -*-
+
+"""
+manorm.logging
+~~~~~~~~~~~~~~
+
+Logging configurations for MAnorm.
+"""
+
 from __future__ import absolute_import
 
 import logging
@@ -28,7 +36,7 @@ def setup_logger(verbose=False):
     sh = logging.StreamHandler(stream=sys.stderr)
     if verbose:
         sh.setLevel(logging.DEBUG)
-        formatter = logging.Formatter("%(asctime)s %(filename)s-%(lineno)d %(levelname)s: %(message)s",
+        formatter = logging.Formatter("%(asctime)s %(name)-20s %(lineno)-4d %(levelname)-8s %(message)s",
                                       datefmt="%Y-%m-%d %H:%M")
     else:
         sh.setLevel(logging.INFO)
