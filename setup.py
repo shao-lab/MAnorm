@@ -1,20 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
 import io
+import os
 import sys
 
 from setuptools import find_packages, setup
-
-import manorm
 
 py_version = sys.version_info[:2]
 if not (py_version == (2, 7) or py_version >= (3, 4)):
     raise RuntimeError("MAnorm requires Python 2.7 or 3.4+ to install!")
 
+pkg_dir = os.path.abspath(os.path.dirname(__file__))
 description = "A robust model for quantitative comparison of ChIP-Seq data sets."
-with io.open('README.rst', encoding='utf-8') as fin:
+with io.open(os.path.join(pkg_dir, 'README.rst'), encoding='utf-8') as fin:
     long_description = fin.read()
+
+with io.open(os.path.join(pkg_dir, 'manorm', '__init__.py'), encoding='utf-8') as fin:
+    version = re.search(r'__version__ = \'(.*?)\'', fin.read()).group(1)
 
 install_requires = [
     "numpy",
@@ -49,7 +53,7 @@ classifiers = [
 
 setup(
     name="MAnorm",
-    version=manorm.__version__,
+    version=version,
     description=description,
     long_description=long_description,
     author="Hayden Sun",
