@@ -134,6 +134,7 @@ def load_peaks(path, format='bed', name=None):
     :param format: Format of peaks file.
     :param name: Name of peaks.
     """
+    logger.debug("Loading peaks from {}".format(path))
     if name is None:
         name = os.path.splitext(os.path.basename(path))[0]
     peaks = Peaks(name=name)
@@ -143,4 +144,5 @@ def load_peaks(path, format='bed', name=None):
         raise UnknownFormatError(format=format)
     for chrom, start, end, summit in peak_parser.parse():
         peaks.add(Peak(chrom=chrom, start=start, end=end, summit=summit))
+    logger.debug("Loaded {} peaks".format(peaks.size))
     return peaks
