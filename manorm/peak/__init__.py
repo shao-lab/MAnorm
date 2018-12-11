@@ -12,6 +12,7 @@ from __future__ import absolute_import, division
 import logging
 import os
 
+from manorm.compat import filter
 from manorm.exceptions import UnknownFormatError
 from manorm.peak.parsers import BEDParser, BEDSummitParser, MACS2Parser, MACSParser, NarrowPeakParser
 
@@ -41,6 +42,7 @@ class Peak(object):
         else:
             self.summit = (self.start + self.end) // 2
         self.type = None
+        self.summit_dis = None
         self.read_count1 = None
         self.read_count2 = None
         self.read_density1 = None
@@ -72,9 +74,14 @@ class Peaks(object):
         self.data = {}
 
     @property
+    def chroms(self):
+        """Return the chromosome names of peaks."""
+        return self.data.keys()
+
+    @property
     def size(self):
         """Return the number of peaks."""
-        return sum(len(self.data[chrom]) for chrom in self.data)
+        return sum(len(self.data[chrom]) for chrom in self.chroms)
 
     def add(self, peak):
         """Add a peak.
@@ -93,7 +100,7 @@ class Peaks(object):
         :param by: Attribute name to sort by. Defaults to `'start'`.
         :param ascending: Sort ascending or descending. Defaults to `True`.
         """
-        for chrom in self.data:
+        for chrom in self.chroms:
             self.data[chrom].sort(key=lambda x: getattr(x, by), reverse=ascending)
 
     def fetch(self, chrom):
@@ -105,6 +112,16 @@ class Peaks(object):
             return self.data[chrom]
         else:
             return []
+
+    @property
+    def n_common(self):
+        """Return the number of common peaks."""
+        return sum(sum(1 for _ in filter(lambda x: x.type == 'common', self.fetch(chrom))) for chrom in self.chroms)
+
+    @property
+    def n_unique(self):
+        """Return the number of unique peaks."""
+        return sum(sum(1 for _ in filter(lambda x: x.type == 'unique', self.fetch(chrom))) for chrom in self.chroms)
 
     def __repr__(self):
         return "Peaks(name={})".format(self.name)
