@@ -13,7 +13,7 @@ import gzip
 import logging
 import os
 
-from manorm import compat
+from manorm.compat import open
 from manorm.exceptions import PeakFormatError
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ class PeakParser(object):
         if self.compressed:
             self.handle = gzip.open(self.path, 'rb')
         else:
-            self.handle = compat.open(self.path)
+            self.handle = open(self.path)
 
     def close(self):
         """Close the peak file."""
@@ -48,7 +48,7 @@ class PeakParser(object):
         if line == '':  # skip empty lines
             return 1
         elif (line.startswith('#') or line.startswith('track') or line.startswith('browser')  # BED header
-              or line.split('\t')[0] == 'chr'):  # MACS-xls header
+              or line.split('\t')[0] == 'chr'):  # MACS/MACS2 xls header
             return 2
         return 0
 
