@@ -36,6 +36,7 @@ def overlap_on_single_chr(peaks1, peaks2):
 
 def classify_peaks_by_overlap(peaks1, peaks2):
     """Given two sets of peaks, classify peaks according to overlap."""
+    logger.debug("Classifying unique/common peaks by overlap")
     for chrom in set(peaks1.chroms) | set(peaks2.chroms):
         logger.debug("Classifying on {}".format(chrom))
         flag1, flag2 = overlap_on_single_chr(peaks1.fetch(chrom), peaks2.fetch(chrom))
@@ -69,6 +70,7 @@ def merge_common_peaks(peaks1, peaks2):
         peak.summit_dis = min_dis
         peaks_merged.add(peak)
 
+    logger.debug("Merging common peaks")
     peaks_merged = Peaks(name='merged_common_peaks')
 
     for chrom in set(peaks1.chroms) & set(peaks2.chroms):
