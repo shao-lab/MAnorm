@@ -14,7 +14,7 @@ import logging
 import os
 
 from manorm.compat import open
-from manorm.exceptions import PeakFormatError
+from manorm.exceptions import InvalidFormatError
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +78,7 @@ class PeakParser(object):
                 yield self._parse_line(line=line)
             except (IndexError, ValueError):
                 self.close()
-                raise PeakFormatError(format=self.format, line=line, line_num=line_num)
+                raise InvalidFormatError(format=self.format, line=line, line_num=line_num)
 
 
 class BEDParser(PeakParser):

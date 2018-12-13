@@ -13,7 +13,7 @@ import logging
 import os
 
 from manorm.compat import filter
-from manorm.exceptions import UnknownFormatError
+from manorm.exceptions import UnsupportedFormatError
 from manorm.peak.parsers import BEDParser, BEDSummitParser, MACS2Parser, MACSParser, NarrowPeakParser
 
 logger = logging.getLogger(__name__)
@@ -141,7 +141,7 @@ def load_peaks(path, format='bed', name=None):
     try:
         peak_parser = PEAK_PARSERS[format](path)
     except KeyError:
-        raise UnknownFormatError(format=format)
+        raise UnsupportedFormatError(format=format)
     for chrom, start, end, summit in peak_parser.parse():
         peaks.add(Peak(chrom=chrom, start=start, end=end, summit=summit))
     logger.debug("Loaded {} peaks".format(peaks.size))
