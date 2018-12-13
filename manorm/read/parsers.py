@@ -4,7 +4,7 @@
 manorm.read.parsers
 ~~~~~~~~~~~~~~~~~~~
 
-Read parsers to read peak files.
+Parsers to parse read files.
 """
 
 
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 class BEDParser(object):
-    """Class for read BED files."""
+    """Read parser for BED format."""
 
     def __init__(self, path):
         self.path = path
@@ -40,7 +40,7 @@ class BEDParser(object):
             self.handle = open(self.path)
 
     def close(self):
-        """Close the peak file."""
+        """Close the read file."""
         self.handle.close()
 
     @staticmethod
@@ -69,7 +69,7 @@ class BEDParser(object):
         return chrom, pos
 
     def parse(self, *args, **kwargs):
-        """Parse lines to get peaks from the input peak file."""
+        """Parse lines to get reads from the input read file."""
         self.handle.seek(0)  # parse from the beginning of the file
         line_num = 0
         expect_header = True
@@ -93,7 +93,7 @@ class BEDParser(object):
 
 
 class BEDPEParser(BEDParser):
-    """Class for read BEDPE files."""
+    """Read parser for BEDPE format."""
 
     def __init__(self, path):
         super(BEDPEParser, self).__init__(path)

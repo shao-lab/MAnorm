@@ -4,7 +4,7 @@
 manorm.peak.parsers
 ~~~~~~~~~~~~~~~~~~~
 
-Peak parsers to read peak files.
+Parsers to parse peak files.
 """
 
 from __future__ import absolute_import
