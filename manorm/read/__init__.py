@@ -1,73 +1,94 @@
-"""Module for reads and related operation."""
+# -*- coding: utf-8 -*-
+
+"""
+manorm.read
+~~~~~~~~~~~
+
+This module contains Reads objects for read-related operations.
+"""
+
 import os
-from collections import defaultdict
-from manorm.logger import logger
+import logging
 from bisect import bisect_left
-READ_FORMATS = ['bed', 'sam', 'bam']
-class ReadFormatError(Exception):
-    pass
+
+from manorm.exceptions import UnmatchedBedFormatError, UnsupportedFormatError
+from manorm.read.parsers import BAMParser, BEDPEParser, BEDParser, SAMParser
+
+READ_FORMATS = ['bed', 'bedpe', 'sam', 'bam']
+READ_PARSERS = {'bed': BEDParser, 'bedpe': BEDPEParser, 'sam': SAMParser, 'bam': BAMParser}
+
+logger = logging.getLogger(__name__)
 
 
 class Reads(object):
     """Class for reads generated from next-generation sequencing."""
 
-    def __init__(self, path=None, name=None, shift=0):
-        self.path = path
+    def __init__(self, name=None):
+        """Initialize the read set.
+
+        :param name: The name of the read set.
+        """
         self.name = name
-        if self.path and not self.name:
-            self.name = os.path.splitext(os.path.basename(path))[0]
-        self.pos = defaultdict(list)
-        self._size = None
-        if self.path:
-            self.read_file(path, shift)
-            self.sort()
+        self.data = {}
 
-
-    def __len__(self):
-        return self.size
+    @property
+    def chroms(self):
+        """Return the chromosome names of reads."""
+        return self.data.keys()
 
     @property
     def size(self):
-        if not self._size:
-            num = 0
-            for chrom in self.pos:
-                num += len(self.pos[chrom])
-            self._size = num
-        return self._size
+        """Return the number of reads."""
+        return sum(len(self.data[chrom]) for chrom in self.chroms)
+
+    def add(self, chrom, pos):
+        """Add a read.
+
+        :param chrom: Chromosome name of the read.
+        :param pos: Representative position of the read.
+        """
+        self.data.setdefault(chrom, [])
+        self.data[chrom].append(pos)
 
     def sort(self):
-        for chrom in self.pos:
-            self.pos[chrom].sort()
+        """Sort reads."""
+        for chrom in self.chroms:
+            self.data[chrom].sort()
 
-    def _count_reads(self, reads, extend):
-        """Count reads by binary search."""
+    def count(self, chrom, start, end):
+        """Count reads in given interval by binary search."""
         try:
-            head = bisect_left(reads.pos[self.chrom], self.summit - extend)
-            tail = bisect_left(reads.pos[self.chrom], self.summit + extend)
+            head = bisect_left(self.data[chrom], start)
+            tail = bisect_left(self.data[chrom], end)
             return tail - head
         except KeyError:
             return 0
 
 
-def load_reads(path, paired=False, shift=100):
-    """Load positions of sequencing reads from input file."""
-    with open(path, "r") as fin:
-        for line in fin:
-            fields = line.strip().split("\t")
-            chrom, start, end, strand = fields[0], int(fields[1]), int(fields[2]), fields[5]
-            if strand == '+':
-                pos = start + shift
-            elif strand == '-':
-                pos = end - shift
-            else:
-                logger.warning("Invalid Format of Read: {}".format(line.rstrip()))
-            pos[chrom].append(pos)
-#
-# def infer_peak_format(path):
-#     """Automatically infer the format of input peak file."""
-#     for format in PEAK_FORMATS:
-#         logger.debug("Matching with {!r} format".format(format))
-#         parser = peak_parsers[format](path)
-#         if parser.check(rows=50):
-#             return format
-#     raise UnknownFormatError("Failed to infer the format, please specify it manually!")
+def load_reads(path, format='bed', paired=False, shift=100, name=None):
+    """Read reads from file.
+
+    :param path: The file path to read reads from.
+    :param format: Format of reads file.
+    :param paired: Paired-end mode.
+    :param shift: Shift size of single-end reads.
+    :param name: Name of reads.
+    """
+    logger.debug("Loading reads from {}".format(path))
+    if paired and format == 'bed':
+        raise UnmatchedBedFormatError
+    if not paired and format == 'bedpe':
+        raise UnmatchedBedFormatError
+    if name is None:
+        name = os.path.splitext(os.path.basename(path))[0]
+    reads = Reads(name=name)
+    try:
+        read_parser = READ_PARSERS[format](path)
+    except KeyError:
+        raise UnsupportedFormatError(format=format)
+    for chrom, pos in read_parser.parse(paired=paired, shift=shift):
+        if chrom is not None:
+            reads.add(chrom, pos)
+    read_parser.close()
+    logger.debug("Loaded {:,} reads".format(reads.size))
+    return reads
