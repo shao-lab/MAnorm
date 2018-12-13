@@ -144,5 +144,6 @@ def load_peaks(path, format='bed', name=None):
         raise UnsupportedFormatError(format=format)
     for chrom, start, end, summit in peak_parser.parse():
         peaks.add(Peak(chrom=chrom, start=start, end=end, summit=summit))
+    peak_parser.close()
     logger.debug("Loaded {} peaks".format(peaks.size))
     return peaks
