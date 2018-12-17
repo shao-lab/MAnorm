@@ -7,7 +7,6 @@ manorm.read.parsers
 Parsers to parse read files.
 """
 
-
 from __future__ import absolute_import, division
 
 import pysam
@@ -86,7 +85,9 @@ class BEDParser(object):
                 else:
                     expect_header = False
             try:
-                yield self._parse_line(line=line, *args, **kwargs)
+                chrom, pos = self._parse_line(line=line, *args, **kwargs)
+                if chrom is not None:
+                    yield chrom, pos
             except (IndexError, ValueError):
                 self.close()
                 raise InvalidFormatError(format=self.format, line=line, line_num=line_num)
@@ -111,13 +112,78 @@ class BEDPEParser(BEDParser):
         start = min(start1, start2)
         end = max(end1, end2)
         if chrom1 == chrom2:
-            return chrom1, (start+end) // 2
+            return chrom1, (start + end) // 2
         else:
             return None, None
 
 
 class SAMParser(object):
-    pass
+    """Read parser for SAM format.
+    Ref: http://samtools.sourceforge.net/SAM1.pdf
+    """
 
-class BAMParser(object):
-    pass
+    def __init__(self, path):
+        self.path = path
+        self.format = 'SAM'
+        self.handle = pysam.AlignmentFile(self.path, 'r')
+
+    def close(self):
+        """Close the read file."""
+        self.handle.close()
+
+    def parse(self, paired=False, shift=100):
+        """Parse lines to get reads from the input read file."""
+        for read in self.handle:
+            if read.is_unmapped or read.is_qcfail or read.is_secondary or read.is_supplementary:
+                continue
+            if paired:
+                if not read.is_paired:
+                    logger.warning(
+                        "Detected single-end read in paired-end mode: {!r}, skipped.".format(read.to_string()))
+                    continue
+                if read.is_read1 and read.is_proper_pair and not read.mate_is_unmapped:
+                    chrom1 = read.reference_name
+                    start1 = read.reference_start
+                    end1 = read.reference_end
+                    chrom2 = read.next_reference_name
+                    if read.is_reverse:
+                        start = end1 + read.templete_length
+                        end = end1
+                    else:
+                        start = start1
+                        end = start1 + read.templete_length
+                    if chrom1 == chrom2:
+                        if end - start > 2000:
+                            logger.warning(
+                                "Detected paired-end reads with template length logger than 2Kbp: {!r}.".format(
+                                    read.to_string()))
+                        yield chrom1, (start + end) // 2
+                    else:
+                        continue
+                else:
+                    continue
+            else:
+                if read.is_paired:
+                    logger.warning(
+                        "Detected paired-end read in single-end mode: {!r}, skipped.".format(read.to_string()))
+                    continue
+                if read.is_unmapped:
+                    continue
+                else:
+                    chrom = read.reference_name
+                    start = read.reference_start
+                    end = read.reference_end
+                    if read.is_reverse:
+                        pos = end - shift
+                    else:
+                        pos = start + shift
+                    yield chrom, pos
+
+
+class BAMParser(SAMParser):
+    """Read parser for BAM format."""
+
+    def __init__(self, path):
+        self.path = path
+        self.format = 'BAM'
+        self.handle = pysam.AlignmentFile(self.path, 'rb')

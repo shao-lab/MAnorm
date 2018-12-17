@@ -87,8 +87,7 @@ def load_reads(path, format='bed', paired=False, shift=100, name=None):
     except KeyError:
         raise UnsupportedFormatError(format=format)
     for chrom, pos in read_parser.parse(paired=paired, shift=shift):
-        if chrom is not None:
-            reads.add(chrom, pos)
+        reads.add(chrom, pos)
     read_parser.close()
     logger.debug("Loaded {:,} reads".format(reads.size))
     return reads
