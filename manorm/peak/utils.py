@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 
 def overlap_on_single_chr(peaks1, peaks2):
     """Given two sets of peaks on the same chromosome, return the overlap flag."""
-    flag1 = np.zeros(len(peaks1))
-    flag2 = np.zeros(len(peaks2))
+    flag1 = np.zeros(len(peaks1), dtype=np.int)
+    flag2 = np.zeros(len(peaks2), dtype=np.int)
     starts = np.array([peak.start for peak in peaks2])
     ends = np.array([peak.end for peak in peaks2])
     for idx, peak in enumerate(peaks1):

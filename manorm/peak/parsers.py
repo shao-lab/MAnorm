@@ -145,7 +145,7 @@ class MACS2Parser(PeakParser):
         chrom = fields[0]
         start = int(fields[1]) - 1  # 1-based coordinates
         end = int(fields[2])
-        summit = int(fields[4])  # absolute peak summit position (from MACS2 manual)
+        summit = int(fields[4]) - 1  # absolute peak summit position (from MACS2 manual)
         return chrom, start, end, summit
 
 

@@ -101,7 +101,7 @@ class Peaks(object):
         :param ascending: Sort ascending or descending. Defaults to `True`.
         """
         for chrom in self.chroms:
-            self.data[chrom].sort(key=lambda x: getattr(x, by), reverse=ascending)
+            self.data[chrom].sort(key=lambda x: getattr(x, by), reverse=not ascending)
 
     def fetch(self, chrom):
         """Fetch peaks from specified chromosome.
@@ -145,5 +145,6 @@ def load_peaks(path, format='bed', name=None):
     for chrom, start, end, summit in peak_parser.parse():
         peaks.add(Peak(chrom=chrom, start=start, end=end, summit=summit))
     peak_parser.close()
+    peaks.sort()
     logger.debug("Loaded {} peaks".format(peaks.size))
     return peaks
