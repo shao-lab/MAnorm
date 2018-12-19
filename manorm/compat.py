@@ -1,8 +1,16 @@
-"""Code compatibility for Python 2 and 3."""
+# -*- coding: utf-8 -*-
+
+"""
+manorm.compat
+~~~~~~~~~~~~~
+
+Code compatibility for Python 2 and 3.
+"""
 
 from __future__ import absolute_import
 
 import functools
+import io
 import sys
 import itertools
 
@@ -21,7 +29,6 @@ if PY3:
     zip = zip
     filter = filter
     reduce = functools.reduce
-
 else:
     # Python 2
     text_type = unicode
@@ -33,3 +40,5 @@ else:
     zip = itertools.izip
     filter = itertools.ifilter
     reduce = reduce
+
+open = io.open
