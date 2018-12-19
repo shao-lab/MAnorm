@@ -22,6 +22,7 @@ with io.open(os.path.join(pkg_dir, 'manorm', '__init__.py'), encoding='utf-8') a
 
 install_requires = [
     "numpy",
+    "pysam>=0.15.0",
     "matplotlib",
     "statsmodels",
     "scipy"
