@@ -1,0 +1,4 @@
+chr1	1	100	bed_example0	255	+
+chr1	200	500	bed_example1	255	-
+chr2	12345	12525	bed_example2	255	+
+chr9	12111	12345	bed_example3	255	-
