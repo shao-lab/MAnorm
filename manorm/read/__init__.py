@@ -89,5 +89,6 @@ def load_reads(path, format='bed', paired=False, shift=100, name=None):
     for chrom, pos in read_parser.parse(paired=paired, shift=shift):
         reads.add(chrom, pos)
     read_parser.close()
+    reads.sort()
     logger.debug("Loaded {:,} reads".format(reads.size))
     return reads

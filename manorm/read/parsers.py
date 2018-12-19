@@ -147,16 +147,12 @@ class SAMParser(object):
                     end1 = read.reference_end
                     chrom2 = read.next_reference_name
                     if read.is_reverse:
-                        start = end1 + read.templete_length
+                        start = end1 + read.template_length
                         end = end1
                     else:
                         start = start1
-                        end = start1 + read.templete_length
+                        end = start1 + read.template_length
                     if chrom1 == chrom2:
-                        if end - start > 2000:
-                            logger.warning(
-                                "Detected paired-end reads with template length logger than 2Kbp: {!r}.".format(
-                                    read.to_string()))
                         yield chrom1, (start + end) // 2
                     else:
                         continue
