@@ -19,6 +19,7 @@ import numpy as np
 import manorm
 from manorm import peak, read
 from manorm.compat import range
+from manorm.io import mk_dir, output_all_peaks, output_biased_peaks, output_original_peaks, output_wiggle_track
 from manorm.logging import setup_logger
 from manorm.model import MAmodel
 from manorm.peak.utils import generate_random_peaks, overlap_on_single_chr
@@ -82,6 +83,9 @@ class MAnorm(object):
         self.output_dir = path.abspath('') if output_dir is None else path.abspath(output_dir)
         self.verbose = verbose
         self.ma_model = None
+        self.num_biased1 = None
+        self.num_biased2 = None
+        self.num_unbiased = None
         self.args = args
         self.kwargs = kwargs
 
@@ -172,11 +176,15 @@ class MAnorm(object):
 
     def output(self):
         """Write output files."""
-        # output_original_peaks(ma)
-        # output_all_peaks(ma)
-        # output_wiggle_track(ma)
-        # output_unbiased_peaks(ma, m_cutoff)
-        # output_biased_peaks(ma, m_cutoff, p_cutoff)
+        mk_dir(self.output_dir)
+        output_original_peaks(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2)
+        output_all_peaks(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2, self.ma_model.peaks_merged)
+        output_wiggle_track(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2, self.ma_model.peaks_merged)
+        self.num_biased1, self.num_biased2, self.num_unbiased = output_biased_peaks(self.output_dir,
+                                                                                    self.ma_model.peaks1,
+                                                                                    self.ma_model.peaks2,
+                                                                                    self.ma_model.peaks_merged,
+                                                                                    self.m_cutoff, self.p_cutoff)
         # ma_plot(ma)
         pass
 
@@ -203,7 +211,9 @@ class MAnorm(object):
             logger.info("M-A model: M = {:f} * A + {:f}".format(self.ma_model.ma_params[1], self.ma_model.ma_params[0]))
         else:
             logger.info("M-A model: M = {:f} * A - {:f}".format(self.ma_model.ma_params[1], self.ma_model.ma_params[0]))
-        # logger.info("{} peaks with |M_value|<{} are filtered as unbiased peaks".format(unbiased_num, abs(m_cutoff)))
-        # logger.info("{} peaks with M_value>={} are filtered as sample1-biased peaks".format(biased_num1, abs(m_cutoff)))
-        # logger.info(
-        #     "{} peaks with M_value<=-{} are filtered as sample2-biased peaks".format(biased_num2, abs(m_cutoff)))
+        logger.info("{} peaks with |M_value|<{} are filtered as unbiased peaks".format(
+            self.num_unbiased, abs(self.m_cutoff)))
+        logger.info("{} peaks with M_value>={} are filtered as sample1-biased peaks".format(
+            self.num_biased1, abs(self.m_cutoff)))
+        logger.info("{} peaks with M_value<=-{} are filtered as sample2-biased peaks".format(
+            self.num_biased2, abs(self.m_cutoff)))
