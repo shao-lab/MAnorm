@@ -7,6 +7,8 @@ manorm.read
 This module contains classes and functions for read-related operations.
 """
 
+from __future__ import absolute_import
+
 import os
 import logging
 from bisect import bisect_left
