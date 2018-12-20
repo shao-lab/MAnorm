@@ -9,10 +9,11 @@ Parsers to parse read files.
 
 from __future__ import absolute_import, division
 
-import pysam
 import gzip
 import logging
 import os
+
+import pysam
 
 from manorm.compat import open
 from manorm.exceptions import InvalidFormatError
