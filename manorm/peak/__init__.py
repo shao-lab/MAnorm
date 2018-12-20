@@ -131,7 +131,7 @@ class Peaks(object):
     @property
     def chroms(self):
         """Return the chromosome names of peaks."""
-        return self.data.keys()
+        return list(self.data.keys())
 
     @property
     def size(self):

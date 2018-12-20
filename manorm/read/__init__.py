@@ -36,7 +36,7 @@ class Reads(object):
     @property
     def chroms(self):
         """Return the chromosome names of reads."""
-        return self.data.keys()
+        return list(self.data.keys())
 
     @property
     def size(self):
