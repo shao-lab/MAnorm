@@ -4,15 +4,16 @@
 manorm.peak
 ~~~~~~~~~~~
 
-This module contains Peak and Peaks objects for peak-related operations.
+This module contains classes and functions for peak-related operations.
 """
 
 from __future__ import absolute_import, division
 
 import logging
 import os
+from math import exp, log
 
-from manorm.compat import filter
+from manorm.compat import filter, range
 from manorm.exceptions import UnsupportedFormatError
 from manorm.peak.parsers import BEDParser, BEDSummitParser, MACS2Parser, MACSParser, NarrowPeakParser
 
@@ -29,10 +30,10 @@ class Peak(object):
     def __init__(self, chrom, start, end, summit=None):
         """Initialize a peak.
 
-        :param chrom: Chromosome name.
-        :param start: Start coordinate (0-based).
-        :param end: End coordinate (0-based).
-        :param summit: Summit coordinate (0-based).
+        :param chrom: The chromosome name of the peak.
+        :param start: The start coordinate of the peak (0-based).
+        :param end: The end coordinate of the peak (0-based).
+        :param summit: The summit coordinate of the peak (0-based).
         """
         self.chrom = chrom
         self.start = int(start)
@@ -41,6 +42,9 @@ class Peak(object):
             self.summit = int(summit)
         else:
             self.summit = (self.start + self.end) // 2
+        if not self.start <= self.summit <= self.end:
+            raise ValueError("peak start must be <= summit and < end, got start={}, summit={}, end={}".format(
+                self.start, self.summit, self.end))
         self.type = None
         self.summit_dis = None
         self.read_count1 = None
@@ -56,13 +60,64 @@ class Peak(object):
         self.a_value_normed = None
         self.p_value = None
 
+    def count_reads(self, reads1, reads2, window_size=2000):
+        """Count reads and calculate the read density."""
+        if window_size <= 0:
+            raise ValueError("window size must be > 0")
+        extend = window_size // 2
+        self.read_count1 = reads1.count(self.chrom, self.summit - extend, self.summit + extend) + 1  # add a pseudo 1
+        self.read_count2 = reads2.count(self.chrom, self.summit - extend, self.summit + extend) + 1
+        self.read_density1 = self.read_count1 * 1000 / (extend * 2)
+        self.read_density2 = self.read_count2 * 1000 / (extend * 2)
+
+    def cal_ma_value(self):
+        """Calculate the M value and A value based on read densities."""
+        self.m_value = log(self.read_density1, 2) - log(self.read_density2, 2)
+        self.a_value = (log(self.read_density1, 2) + log(self.read_density2, 2)) / 2
+
+    def normalize(self, ma_params):
+        """Normalize M value and A value by robust linear model.
+        ma_model: y = ma_params[0] * x + ma_params[1]
+        """
+
+        def _cal_p_value(x, y):
+            """Calculate P value with given read densities."""
+
+            def _log_factorial(n):
+                num = 0
+                for i in range(1, n + 1):
+                    num += log(i)
+                return num
+
+            if x < 0 or y < 0:
+                raise ValueError("x and y must be >= 0")
+            x = int(round(x))
+            if x == 0:
+                x = 1
+            y = int(round(y))
+            if y == 0:
+                y = 1
+            # use the log-transform to calculate p-value
+            log_p = _log_factorial(x + y) - _log_factorial(x) - _log_factorial(y) - (x + y + 1) * log(2)
+            if log_p < -500:
+                log_p = -500
+            p_value = exp(log_p)
+            return p_value
+
+        self.m_value_normed = round(self.m_value - (ma_params[0] + ma_params[1] * self.a_value), 5)
+        self.a_value_normed = round(self.a_value, 5)
+        self.read_density1_normed = round(2 ** (self.a_value_normed + self.m_value_normed / 2), 5)
+        self.read_density2_normed = round(2 ** (self.a_value_normed - self.m_value_normed / 2), 5)
+        self.p_value = _cal_p_value(self.read_density1_normed, self.read_density2_normed)
+        self.normed = True
+
     def __repr__(self):
         return "Peak({}:{}-{})".format(self.chrom, self.start, self.end)
 
 
 class Peaks(object):
     """Class for a collection of peaks.
-    Peaks are stored by a dict under `self.data` with chromosome names as keys and lists of :class:`Peak` as values.
+    Peaks are stored by a dict under ``self.data`` with chromosome names as keys and lists of :class:`Peak` as values.
     """
 
     def __init__(self, name=None):
@@ -97,8 +152,8 @@ class Peaks(object):
     def sort(self, by='start', ascending=True):
         """Sort peaks.
 
-        :param by: Attribute name to sort by. Defaults to `'start'`.
-        :param ascending: Sort ascending or descending. Defaults to `True`.
+        :param by: Attribute name to sort by. Defaults to ``'start'``.
+        :param ascending: Sort ascending or descending. Defaults to ``True``.
         """
         for chrom in self.chroms:
             self.data[chrom].sort(key=lambda x: getattr(x, by), reverse=not ascending)
