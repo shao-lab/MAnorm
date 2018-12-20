@@ -56,7 +56,7 @@ def argparser_config():
                             help="Name of sample 1, which is used in output files. If not specified, the name of the "
                                  "peak file will be used as the sample name.")
     input_args.add_argument("--n2", "--name2", metavar="NAME", dest="name2", default=None,
-                            help="Name of sample 2, same as `--n1/--name1`.")
+                            help="Name of sample 2, same as '--n1/--name1'.")
 
     reads_args = parser.add_argument_group("Reads Manipulation")
     reads_args.add_argument("--s1", "--shiftsize1", metavar="N", dest="shift_size1", type=int, default=100,
@@ -65,10 +65,10 @@ def argparser_config():
                                  "underlying DNA fragment. Set to half of DNA fragment size of the ChIP-seq library. "
                                  "Default: 100")
     reads_args.add_argument("--s2", "--shiftsize2", metavar="N", dest="shift_size2", type=int, default=100,
-                            help="Reads shift size of sample 2, same as `--s1/--shiftsize1`. Default: 100")
+                            help="Reads shift size of sample 2, same as '--s1/--shiftsize1'. Default: 100")
     reads_args.add_argument("--pe", "--paired-end", dest="paired", action='store_true', default=False,
                             help="Paired-end mode. The middle point of each read pair is used to represent the genomic "
-                                 "locus of underlying DNA fragment. `--s1` and `--s2` are ignored with this option on.")
+                                 "locus of underlying DNA fragment. '--s1' and '--s2' are ignored with this option on.")
 
     model_args = parser.add_argument_group("Normalization Model")
     model_args.add_argument("-w", "--window-size", metavar="LENGTH", dest="window_size", type=pos_int, default=2000,
@@ -77,8 +77,8 @@ def argparser_config():
                                  "Default: 2000")
     model_args.add_argument("--summit-dis", metavar="LENGTH", dest="summit_dis", type=pos_int, default=None,
                             help="Overlapping common peaks with summit-to-summit distance beyond this are excluded "
-                                 "in model fitting. Default: `-w/--window-size` / 4")
-    model_args.add_argument("--n-random", metavar="N", dest="n_random", type=pos_int, default=10,
+                                 "in model fitting. Default: '-w/--window-size' / 4")
+    model_args.add_argument("--n-random", metavar="N", dest="n_random", type=int, default=10,
                             help="Number of random simulations to test the enrichment of peak overlap between two "
                                  "samples. Set to 0 to disable the testing. Default: 10")
 
