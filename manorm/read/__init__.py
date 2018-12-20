@@ -4,7 +4,7 @@
 manorm.read
 ~~~~~~~~~~~
 
-This module contains Reads objects for read-related operations.
+This module contains classes and functions for read-related operations.
 """
 
 import os
@@ -44,8 +44,8 @@ class Reads(object):
     def add(self, chrom, pos):
         """Add a read.
 
-        :param chrom: Chromosome name of the read.
-        :param pos: Representative position of the read.
+        :param chrom: The chromosome name of the read.
+        :param pos: The representative genomic position of the read.
         """
         self.data.setdefault(chrom, [])
         self.data[chrom].append(pos)
@@ -56,7 +56,14 @@ class Reads(object):
             self.data[chrom].sort()
 
     def count(self, chrom, start, end):
-        """Count reads in given interval by binary search."""
+        """Count reads in given interval by binary search.
+
+        :param chrom: The chromosome name of the interval.
+        :param start: The start pos of the interval.
+        :param end: The end pos of the interval.
+        """
+        if start >= end:
+            raise ValueError("start must be < end.")
         try:
             head = bisect_left(self.data[chrom], start)
             tail = bisect_left(self.data[chrom], end)
@@ -70,7 +77,7 @@ def load_reads(path, format='bed', paired=False, shift=100, name=None):
 
     :param path: The file path to read reads from.
     :param format: Format of reads file.
-    :param paired: Paired-end mode.
+    :param paired: Paired-end mode or not.
     :param shift: Shift size of single-end reads.
     :param name: Name of reads.
     """
