@@ -23,6 +23,7 @@ from manorm.io import mk_dir, output_all_peaks, output_biased_peaks, output_orig
 from manorm.logging import setup_logger
 from manorm.model import MAmodel
 from manorm.peak.utils import generate_random_peaks, overlap_on_single_chr
+from manorm.plot import plt_figures
 
 logger = logging.getLogger(__name__)
 
@@ -185,8 +186,8 @@ class MAnorm(object):
                                                                                     self.ma_model.peaks2,
                                                                                     self.ma_model.peaks_merged,
                                                                                     self.m_cutoff, self.p_cutoff)
-        # ma_plot(ma)
-        pass
+        plt_figures(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2, self.ma_model.peaks_merged,
+                    self.ma_model.ma_params)
 
     def report(self):
         """Report statistics."""
@@ -208,9 +209,11 @@ class MAnorm(object):
         logger.info("Fold change of overlapping peaks compared to random: {:.2f}".format(
             self.ma_model.peaks1.n_common / self.n_overlap_rand.mean()))
         if self.ma_model.ma_params[0] >= 0:
-            logger.info("M-A model: M = {:f} * A + {:f}".format(self.ma_model.ma_params[1], self.ma_model.ma_params[0]))
+            logger.info("M-A model: M = {:f} * A + {:f}".format(self.ma_model.ma_params[1],
+                                                                self.ma_model.ma_params[0]))
         else:
-            logger.info("M-A model: M = {:f} * A - {:f}".format(self.ma_model.ma_params[1], self.ma_model.ma_params[0]))
+            logger.info("M-A model: M = {:f} * A - {:f}".format(self.ma_model.ma_params[1],
+                                                                abs(self.ma_model.ma_params[0])))
         logger.info("{} peaks with |M_value|<{} are filtered as unbiased peaks".format(
             self.num_unbiased, abs(self.m_cutoff)))
         logger.info("{} peaks with M_value>={} are filtered as sample1-biased peaks".format(
