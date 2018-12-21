@@ -10,7 +10,7 @@ This module contains classes and functions designed for MAnorm normalization mod
 from __future__ import absolute_import
 
 import numpy as np
-import statsmodels.api as sm
+from sklearn.linear_model import HuberRegressor
 
 from manorm.peak.utils import classify_peaks_by_overlap, merge_common_peaks
 
@@ -57,9 +57,8 @@ class MAmodel(object):
         m_values = np.array(m_values)
         a_values = np.array(a_values)
         mask = np.where((m_values >= -10) & (m_values <= 10))[0]
-        x = sm.add_constant(a_values[mask])
-        y = m_values[mask]
-        self.ma_params = sm.RLM(y, x).fit().params
+        huber = HuberRegressor().fit(a_values[mask].reshape(-1, 1), m_values[mask])
+        self.ma_params = [huber.intercept_, huber.coef_[0]]
 
     def normalize(self):
         """Normalize all peaks."""
