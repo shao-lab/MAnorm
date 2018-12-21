@@ -77,7 +77,7 @@ class Peak(object):
 
     def normalize(self, ma_params):
         """Normalize M value and A value by robust linear model.
-        ma_model: y = ma_params[0] * x + ma_params[1]
+        ma_model: y = ma_params[1] * x + ma_params[0]
         """
 
         def _cal_p_value(x, y):
