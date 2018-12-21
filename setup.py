@@ -24,8 +24,7 @@ install_requires = [
     "numpy",
     "pysam>=0.15.0",
     "matplotlib",
-    "statsmodels",
-    "scipy"
+    "scikit-learn",
 ]
 
 extras_require = {
