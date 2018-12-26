@@ -1,5 +1,5 @@
-MAnorm
-======
+Welcome to MAnorm
+=================
 
 .. image:: https://travis-ci.org/shao-lab/MAnorm.svg?branch=master
    :alt: Travis Build
@@ -17,18 +17,19 @@ MAnorm
    :alt: License
    :target: https://github.com/shao-lab/MAnorm/blob/master/LICENSE
 
-**MAnorm** is a robust model for quantitative comparison of ChIP-Seq data sets.
+What is MAnorm?
+---------------
 
+**MAnorm** is a robust model for quantitative comparison of ChIP-Seq data sets and you can use it for:
 
-Features
---------
+- Normalization of two ChIP-seq samples
+- Quantitative comparison (differential analysis) of two ChIP-seq samples
+- Evaluating the overlap enrichment of the protein binding sites(peaks)
+- Elucidating underlying mechanisms of cell-type specific gene regulation
 
-- Quantitatively compare ChIP-Seq samples
-- Evaluate the overlap enrichment of protein binding sites compared to random
-- Robust linear regression on common protein binding sites(peaks) for normalization
-- The normalized *M-value* could serve as a quantitative measure of the differential binding
-- Reflect authentic biological differences
-- Support multiple format of sequencing reads
+MAnorm is developed in Python with a command line interface, you can use it on Linux and macOS platforms.
+Basically, it requires 4 input files (2 ChIP-seq peak files and 2 sequencing read files) corresponds to the
+two samples under comparison. Starting from version 1.2.0, MAnorm supports multiple format for peaks/reads files.
 
 
 Contents
@@ -36,7 +37,7 @@ Contents
 
 .. toctree::
    :maxdepth: 2
-   
+
    intro
    tutorial
    changelog

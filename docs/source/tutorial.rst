@@ -17,15 +17,12 @@ from source code alternatively.
 Prerequisites
 -------------
 
-.. tip::
-   MAnorm is implemented under **Python 2.7** and will support **Python 3.X** in the following updates.
-
-* **Python 2.7**
+* Python 2.7 and Python 3.4+
 * setuptools
 * numpy
 * matplotlib
-* statsmodels
 * scipy
+* scikit-learn
 
 Install with pip
 ----------------
