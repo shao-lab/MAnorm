@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import re
 import io
 import os
+import re
 import sys
 
 from setuptools import find_packages, setup
@@ -12,25 +12,29 @@ py_version = sys.version_info[:2]
 if not (py_version == (2, 7) or py_version >= (3, 4)):
     raise RuntimeError("MAnorm requires Python 2.7 or 3.4+ to install!")
 
-pkg_dir = os.path.abspath(os.path.dirname(__file__))
 description = "A robust model for quantitative comparison of ChIP-Seq data sets."
-with io.open(os.path.join(pkg_dir, 'README.rst'), encoding='utf-8') as fin:
-    long_description = fin.read()
+
+pkg_dir = os.path.abspath(os.path.dirname(__file__))
 
 with io.open(os.path.join(pkg_dir, 'manorm', '__init__.py'), encoding='utf-8') as fin:
     version = re.search(r'__version__ = \'(.*?)\'', fin.read()).group(1)
 
+with io.open(os.path.join(pkg_dir, 'README.rst'), encoding='utf-8') as fin:
+    long_description = fin.read()
+
+
 install_requires = [
+    "setuptools",
     "numpy",
     "pysam>=0.15.0",
-    "matplotlib",
-    "scikit-learn",
+    "matplotlib>=2.2.3",
+    "scikit-learn>=0.19.2",
 ]
 
 extras_require = {
     "test": ["pytest >= 3.0.0",
-             "pytest-cov"],
-    "docs": ["sphinx >= 1.6.3",
+             "pytest-cov >= 2.6.0"],
+    "docs": ["sphinx >= 1.8.0",
              "sphinx_rtd_theme"]
 }
 
@@ -39,7 +43,8 @@ classifiers = [
     "Environment :: Console",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: BSD License",
-    "Operating System :: OS Independent",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS :: MacOS X"
     "Programming Language :: Python",
     "Programming Language :: Python :: 2",
     "Programming Language :: Python :: 2.7",
