@@ -1,3 +1,5 @@
+.. _home:
+
 Welcome to MAnorm
 =================
 
@@ -20,17 +22,44 @@ Welcome to MAnorm
 What is MAnorm?
 ---------------
 
-**MAnorm** is a robust model for quantitative comparison of ChIP-Seq data sets and you can use it for:
+**MAnorm** is a robust model for quantitative comparison of ChIP-Seq data sets of TFs (transcription factors)
+or epigenetic modifications and you can use it for:
 
 - Normalization of two ChIP-seq samples
 - Quantitative comparison (differential analysis) of two ChIP-seq samples
 - Evaluating the overlap enrichment of the protein binding sites(peaks)
 - Elucidating underlying mechanisms of cell-type specific gene regulation
 
-MAnorm is developed in Python with a command line interface, you can use it on Linux and macOS platforms.
-Basically, it requires 4 input files (2 ChIP-seq peak files and 2 sequencing read files) corresponds to the
-two samples under comparison. Starting from version 1.2.0, MAnorm supports multiple format for peaks/reads files.
 
+How MAnorm works?
+-----------------
+
+MAnorm uses common peaks of two samples as a reference to build the rescaling model for normalization, which is based
+on the empirical assumption that if a chromatin-associated protein has a substantial number of peaks shared in two
+conditions, the binding at these common regions will tend to be determined by similar mechanisms, and thus should
+exhibit similar global binding intensities across samples. The observed differences on common peaks are presumed to
+reflect the scaling relationship of ChIP-Seq signals between two samples, which can be applied to all peaks.
+
+The normalized *M* value given by MAnorm was used as a **quantitative** measure of **differential binding** in each
+peak region between two samples, with peak regions associated with larger absolute *M* values exhibiting greater
+binding differences between two samples.
+
+.. image:: image/workflow.jpg
+
+MAnorm is developed in Python with a command line interface, you can use it on Linux and macOS platforms.
+Basically, it requires a ChIP-seq peak file and a sequencing read file for each sample under comparison.
+MAnorm supports multiple common-used formats for peak/read files, including BED/MACS/MACS2/narrowPeak
+formats for peak files and BED/BEDPE/SAM/BAM formats for read files.
+
+Citation
+--------
+
+If you use MAnorm or any derived code, please cite this paper in your publication:
+
+`Shao Z, Zhang Y, Yuan GC, Orkin SH, Waxman DJ. (2012) MAnorm: a robust model for quantitative comparison of ChIP-Seq
+data sets. Genome Biol. Mar 16;13(3):R16.`__
+
+.. __: http://genomebiology.com/2012/13/3/R16/abstract
 
 Contents
 --------
@@ -38,30 +67,22 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   intro
+   Home<self>
+   install
+   usage
    tutorial
    changelog
    faq
    license
    contact
 
-Citation
---------
-
-If you use MAnorm or any derived code, please cite this paper in your publication:
-
-`Shao Z, Zhang Y, Yuan GC, Orkin SH, Waxman DJ. (2012) MAnorm: a robust model for quantitative comparison of ChIP-Seq data sets. Genome Biol. Mar 16;13(3):R16.`__
-
-.. __: http://genomebiology.com/2012/13/3/R16/abstract
-
-
 ---------------
 
-The Python version of MAnorm is developed by ShaoLab_ at `CAS-MPG Partner Institute for Computational Biology, SIBS, CAS`_.
+The Python version of MAnorm is developed by ShaoLab_ at `CAS-MPG Partner Institute for Computational Biology, SIBS,
+CAS`_.
 
 .. seealso::
    GitHub repository of MAnorm: https://github.com/shao-lab/MAnorm
 
 .. _ShaoLab: http://bioinfo.sibs.ac.cn/shaolab/
 .. _CAS-MPG Partner Institute for Computational Biology, SIBS, CAS: http://www.picb.ac.cn/picb/indexeng.jsp
-
