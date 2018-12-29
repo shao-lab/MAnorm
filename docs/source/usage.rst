@@ -171,7 +171,7 @@ the same chromosome are counted.
 MAnorm Output Files
 ===================
 
-1. *_all_MAvalues.xls
+1. \*_all_MAvalues.xls
 
 This is the main output result of MAnorm which contains the M-A values and normalized
 read density of each peak, common peaks from two samples are merged together.
