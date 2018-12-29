@@ -10,16 +10,19 @@ Usage
 Usage of MAnorm
 ===============
 
-To check whether MAnorm is properly installed, you can inspect the version of MAnorm by ``-v/--version`` option:
+Command Line Interface
+----------------------
+
+First, to check whether MAnorm is properly installed, you can inspect the version of MAnorm by ``-v/--version`` option:
 
 .. code-block:: shell
 
   $ manorm --version
 
-Command-Line Interface
-----------------------
+Basic Usage
+-----------
 
-MAnorm provide a console script ``manorm`` for running the program, the basic usage is as follows:
+MAnorm provides a console script ``manorm`` for running the program, the basic usage is as follows:
 
 .. code-block:: shell
 
@@ -48,8 +51,8 @@ Options
 -w, --window-size    Window size to count reads and calculate read density. Default: 2000
 --summit-dis         Summit-to-summit distance  cutoff for common peaks. Default: ``-w``/4
 --n-random           Number of simulations to test the enrichment of peaks overlap between two samples.
--m, --m-cutoff       Absolute *M-value* (log2-ratio) cutoff to define biased (differential binding) peaks.
--p, --p-cutoff       *P-value* cutoff to define biased peaks.
+-m, --m-cutoff       Absolute *M* value (*log*:sub:`2`-ratio) cutoff to define biased (differential binding) peaks.
+-p, --p-cutoff       *P* value cutoff to define biased peaks.
 --oa, --output-all   Output additional files which contains the results of original (unmerged) peaks.
 --dir                **[Required]** Output directory.
 --verbose            Enable verbose log messages.
@@ -71,7 +74,7 @@ Options
 
   * ``--s1/--shiftsize1`` and ``--s2/--shiftsize2``:
 
-    These values are used to shift single-end reads towards 3' direction and the 5' end of each
+    These values are used to shift **single-end** reads towards 3' direction and the 5' end of each
     shifted read is used to represent the genomic locus of underlying DNA fragment. Set to half
     of DNA fragment size of the ChIP-seq library. These options are disabled in paired-end mode.
 
@@ -88,13 +91,13 @@ Options
   * ``--summit-dis``:
 
     Overlapping common peaks with summit-to-summit distance beyond this are excluded in model fitting.
-    This option is used to exclude common peaks that only overlap on the edge of each peak.
+    This option is used to exclude common peaks that only overlap on the edge of each other.
     Default: ``-w/--window-size``/4
 
   * ``--oa/--output-all``:
 
     By default, MAnorm only write the comparison results of unique and merged common peaks in a single
-    output file. With this option on, MAnorm will output two extra files which contains the results of
+    output file. With this option on, MAnorm will write two extra files which contains the results of
     the original(unmerged) peaks.
 
 
@@ -139,20 +142,20 @@ but the 4th columns should be the ``summit`` position (**relative** position to 
 Format of read files
 --------------------
 
-MAnorm does not excluded any duplicated reads, and you may need use other tools to remove
-duplicates in advance to if you want.
+.. note:: MAnorm does not excluded any duplicated reads, and you may need use other tools to remove
+          duplicates in advance to if you want.
 
 BED format
 ^^^^^^^^^^
 
-.. note:: BED format can only be used in single-end mode.
+.. note:: BED format can only be used in **single-end** mode.
 
 Standard `BED`_ format is supported.
 
 BEDPE format
 ^^^^^^^^^^^^
 
-.. note:: BEDPE format can only be used in paired-end mode.
+.. note:: BEDPE format can only be used in **paired-end** mode.
 
 `BEDPE`_ format which is defined by `bedtools`_ is also supported. Paired reads with
 both ends mapped to a same chromosome are counted.
@@ -168,7 +171,7 @@ the same chromosome are counted.
 MAnorm Output Files
 ===================
 
-1. output_name_all_MAvalues.xls
+1. *_all_MAvalues.xls
 
 This is the main output result of MAnorm which contains the M-A values and normalized
 read density of each peak, common peaks from two samples are merged together.
@@ -177,11 +180,11 @@ read density of each peak, common peaks from two samples are merged together.
  - start: start position of the peak
  - end: end position of the peak
  - summit: summit position of the peak (relative to start)
- - m_value: M value (log2 Fold change) of normalized read densities under comparison
- - a_value: A value (average signal strength) of normalized read densities under comparison
+ - m_value: *M* value (*log*:sub:`2` fold change) of normalized read densities under comparison
+ - a_value: *A* value (average signal strength) of normalized read densities under comparison
  - p_value
- - peak_group: indicates where the peak  is come from
- - normalized_read_density_in _sample1
+ - peak_group: indicates where the peak is come from and whether it is a common peak
+ - normalized_read_density_in_sample1
  - normalized_read_density_in_sample2
 
  .. note::
@@ -191,14 +194,14 @@ read density of each peak, common peaks from two samples are merged together.
 
 This folder contains the filtered biased/unbiased peaks in BED format.
 
-  - \*M_above_*_biased_peaks.bed
-  - \*M_below_*_biased_peaks.bed
+  - \*_M_above_*_biased_peaks.bed
+  - \*_M_below_*_biased_peaks.bed
   - \*_unbiased_peaks.bed
 
 3. output_tracks/
 
 These files are genome track files of M values, A values and P values in ``wig`` format,
-you can upload these files to a genome browser.
+you can upload these files to a genome browser to visualize them.
 
   - \*_M_values.wig
   - \*_A_values.wig
@@ -207,7 +210,7 @@ you can upload these files to a genome browser.
 4. output_figures/
 
 This folder contains M-A plots before/after normalization and a scatter plot which shows the
-scaling relationship of two samples.
+scaling relationship between two samples.
 
   - \*_MA_plot_before_normalization.png
   - \*_MA_plot_after_normalization.png

@@ -3,8 +3,8 @@
 Installation
 ============
 
-MAnorm is written in Python and supports Python 2.7 or Python 3.4+. It can be obtained easily from PyPI_ or Bioconda_,
-the commands below show how to install the latest release of MAnorm.
+MAnorm is written in Python and supports Python 2.7 or Python 3.4+. It can be obtained easily from
+PyPI_ or Bioconda_, the commands below show how to install the latest release of MAnorm.
 
 .. warning::
    Starting from v1.2.0, MAnorm no longer support Window platform.
@@ -26,11 +26,11 @@ You can also install MAnorm with conda_ through Bioconda_ channel:
 
    $ conda install -c bioconda manorm
 
-Install from source code
-------------------------
+Install from source
+-------------------
 
-It's highly recommended to install MAnorm from PyPI_  or Bioconda_.
-If you prefer to install it from source code, please read the following steps:
+.. note:: It's highly recommended to install MAnorm from PyPI_  or Bioconda_.
+          If you prefer to install it from source code, please follow the steps below.
 
 The source code of MAnorm is hosted on GitHub_, and ``pip`` is required for installation.
 
