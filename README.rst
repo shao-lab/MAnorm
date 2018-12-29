@@ -58,31 +58,23 @@ Or you can install MAnorm via conda:
 
     $ conda install -c bioconda manorm
 
-MAnorm uses `setuptools <https://setuptools.readthedocs.io/en/latest/>`__ for installation from source code.
-The source code of MAnorm is hosted on GitHub: https://github.com/shao-lab/MAnorm
-
-You can clone the repo and execute the following command under source directory:
-
-::
-
-    $ python setup.py install
-
 Galaxy Installation
 -------------------
 
-MAnorm is available on Galaxy_, you can incorporate MAnorm into your own Galaxy instance.
+MAnorm is also available on Galaxy_, you can incorporate MAnorm into your own Galaxy instance.
 
 Please search and install MAnorm via the `Galaxy Tool Shed`_.
 
 .. _Galaxy: https://galaxyproject.org
 .. _`Galaxy Tool Shed`: https://toolshed.g2.bx.psu.edu/view/haydensun/manorm
 
-Usage
------
+Basic Usage
+-----------
 
 ::
 
-    $ manorm --p1 sample1_peaks.bed --p2 sample2_peaks.bed --r1 sample1_reads.bed --r2 sample2_reads.bed -o sample1_vs_sample2
+    $ manorm --p1 sample1_peaks.bed --p2 sample2_peaks.bed --r1 sample1_reads.bed --r2 sample2_reads.bed
+    --n1 name1 --n2 name2 --dir sample1_vs_sample2
 
 **Note:** Using -h/--help for the details of all arguments.
 
