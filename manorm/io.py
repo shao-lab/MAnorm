@@ -27,7 +27,7 @@ def mk_dir(root_dir):
             os.makedirs(output_dirs[key])
 
 
-def output_original_peaks(root_dir, peaks1, peaks2):
+def write_original_peaks(root_dir, peaks1, peaks2):
     sample_names = [peaks1.name, peaks2.name]
     peaks = [peaks1, peaks2]
 
@@ -47,7 +47,7 @@ def output_original_peaks(root_dir, peaks1, peaks2):
                                                 peak.read_density2_normed))
 
 
-def output_all_peaks(root_dir, peaks1, peaks2, peaks_merged):
+def write_all_peaks(root_dir, peaks1, peaks2, peaks_merged):
     file_name = os.path.join(root_dir, peaks1.name + '_vs_' + peaks2.name + '_all_MAvalues.xls')
     peaks = []
     peak_types = []
@@ -78,7 +78,7 @@ def output_all_peaks(root_dir, peaks1, peaks2, peaks_merged):
                                         peak.read_density1_normed, peak.read_density2_normed))
 
 
-def output_wiggle_track(root_dir, peaks1, peaks2, peaks_merged):
+def write_wiggle_track(root_dir, peaks1, peaks2, peaks_merged):
     output_prefix = peaks1.name + '_vs_' + peaks2.name
     tracks = defaultdict(list)
     for chrom in peaks1.chroms:
@@ -129,7 +129,7 @@ def output_wiggle_track(root_dir, peaks1, peaks2, peaks_merged):
                 fout.write("{}\t{}\n".format(summit, -log10(p_value)))
 
 
-def output_biased_peaks(root_dir, peaks1, peaks2, peaks_merged, m_cutoff, p_cutoff):
+def write_biased_peaks(root_dir, peaks1, peaks2, peaks_merged, m_cutoff, p_cutoff):
     m_cutoff = abs(m_cutoff)
     peaks = defaultdict(list)
     peak_types = defaultdict(list)

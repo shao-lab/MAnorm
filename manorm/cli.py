@@ -88,9 +88,9 @@ def argparser_config():
                                   "Default: 1.0")
     output_args.add_argument("-p", "--p-cutoff", metavar="FLOAT", dest="p_cutoff", type=float, default=0.01,
                              help="P-value cutoff to define biased peaks. Default: 0.01")
-    output_args.add_argument("--oa", "--output-all", dest="output_all", action="store_true", default=False,
+    output_args.add_argument("--wa", "--write-all", dest="write_all", action="store_true", default=False,
                              help="Write two extra output files containing the results of original (unmerged) peaks.")
-    output_args.add_argument("--dir", "--output-dir", metavar="DIR", dest="output_dir", default=None,
+    output_args.add_argument("-o", "--output-dir", metavar="DIR", dest="output_dir", default=None,
                              help="Output directory. Default: Current working directory")
     output_args.add_argument("--verbose", dest="verbose", action="store_true", default=False,
                              help="Enable verbose log messages.")

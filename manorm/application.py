@@ -19,7 +19,7 @@ import numpy as np
 import manorm
 from manorm import peak, read
 from manorm.compat import range
-from manorm.io import mk_dir, output_all_peaks, output_biased_peaks, output_original_peaks, output_wiggle_track
+from manorm.io import mk_dir, write_all_peaks, write_biased_peaks, write_original_peaks, write_wiggle_track
 from manorm.logging import setup_logger
 from manorm.model import MAmodel
 from manorm.peak.utils import generate_random_peaks, overlap_on_single_chr
@@ -33,7 +33,7 @@ class MAnorm(object):
 
     def __init__(self, peak_file1, peak_file2, read_file1, read_file2, peak_format='bed', read_format='bed',
                  name1=None, name2=None, shift_size1=100, shift_size2=100, paired=False, window_size=2000,
-                 summit_dis=None, n_random=10, m_cutoff=1.0, p_cutoff=0.01, output_all=False, output_dir=None,
+                 summit_dis=None, n_random=10, m_cutoff=1.0, p_cutoff=0.01, write_all=False, output_dir=None,
                  verbose=False, *args, **kwargs):
         """Initialize MAnorm application.
 
@@ -53,7 +53,7 @@ class MAnorm(object):
         :param n_random: Number of random simulations to test the enrichment of peak overlapping.
         :param m_cutoff: M value cutoff to define biased (differential binding) peaks.
         :param p_cutoff: P value cutoff to define biased (differential binding) peaks.
-        :param output_all: Write two extra output files containing the results of original (unmerged) peaks.
+        :param write_all: Write two extra output files containing the results of original (unmerged) peaks.
         :param output_dir: Output directory.
         :param verbose: Enable verbose log messages or not.
         :param args: Other positional arguments.
@@ -80,7 +80,7 @@ class MAnorm(object):
         self.name1 = name1 if name1 else path.splitext(path.basename(peak_file1))[0]
         self.name2 = name2 if name2 else path.splitext(path.basename(peak_file2))[0]
         self.output_prefix = self.name1 + "_vs_" + self.name2
-        self.output_all = output_all
+        self.write_all = write_all
         self.output_dir = path.abspath('') if output_dir is None else path.abspath(output_dir)
         self.verbose = verbose
         self.ma_model = None
@@ -178,14 +178,15 @@ class MAnorm(object):
     def output(self):
         """Write output files."""
         mk_dir(self.output_dir)
-        output_original_peaks(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2)
-        output_all_peaks(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2, self.ma_model.peaks_merged)
-        output_wiggle_track(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2, self.ma_model.peaks_merged)
-        self.num_biased1, self.num_biased2, self.num_unbiased = output_biased_peaks(self.output_dir,
-                                                                                    self.ma_model.peaks1,
-                                                                                    self.ma_model.peaks2,
-                                                                                    self.ma_model.peaks_merged,
-                                                                                    self.m_cutoff, self.p_cutoff)
+        if self.write_all:
+            write_original_peaks(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2)
+        write_all_peaks(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2, self.ma_model.peaks_merged)
+        write_wiggle_track(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2, self.ma_model.peaks_merged)
+        self.num_biased1, self.num_biased2, self.num_unbiased = write_biased_peaks(self.output_dir,
+                                                                                   self.ma_model.peaks1,
+                                                                                   self.ma_model.peaks2,
+                                                                                   self.ma_model.peaks_merged,
+                                                                                   self.m_cutoff, self.p_cutoff)
         plt_figures(self.output_dir, self.ma_model.peaks1, self.ma_model.peaks2, self.ma_model.peaks_merged,
                     self.ma_model.ma_params)
 

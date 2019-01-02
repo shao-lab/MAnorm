@@ -112,4 +112,4 @@ def plt_figures(root_dir, peaks1, peaks2, peaks_merged, ma_params):
     ax.set_xlabel("A value", fontsize=16)
     ax.set_ylabel("M value", fontsize=16)
     ax.set_title("-log10(P-value)", fontsize=18)
-    fig.savefig(os.path.join(root_dir, 'output_figures', output_prefix + '_MA_plot_with_P-value.png'), dpi=300)
+    fig.savefig(os.path.join(root_dir, 'output_figures', output_prefix + '_MA_plot_with_P_value.png'), dpi=300)
