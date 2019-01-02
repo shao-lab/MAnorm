@@ -1,9 +1,13 @@
 include LICENSE
 include CHANGELOG.rst
 include README.rst
+include MANIFEST.in
+include tox.ini
+include setup.py
 
 graft docs
 prune docs/build
+graft tests
 
-graft tests/data
-prune tests/data/demo
+global-exclude __pycache__
+global-exclude *.pyc
