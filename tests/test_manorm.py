@@ -1,5 +1,7 @@
 import os
 
+import pytest
+
 from manorm import application
 
 
@@ -27,5 +29,17 @@ def test_manorm(data_dir, tmp_dir):
     with open(fn1, "r") as f1, open(fn2, "r") as f2:
         lines1 = f1.readlines()
         lines2 = f2.readlines()
-        assert lines1 == lines2
-
+        assert len(lines1) == len(lines2)
+        for idx, tmp_line1 in enumerate(lines1):
+            tmp_line1 = tmp_line1.strip().split('\t')
+            tmp_line2 = lines2[idx].strip().split('\t')
+            if idx == 0:
+                assert tmp_line1 == tmp_line2
+            else:
+                assert tmp_line1[:4] == tmp_line2[:4]
+                assert float(tmp_line1[4]) == pytest.approx(float(tmp_line2[4]), abs=1e-5)
+                assert float(tmp_line1[5]) == pytest.approx(float(tmp_line2[5]), abs=1e-5)
+                assert float(tmp_line1[6]) == pytest.approx(float(tmp_line2[6]), abs=1e-5)
+                assert tmp_line1[7] == tmp_line2[7]
+                assert float(tmp_line1[8]) == pytest.approx(float(tmp_line2[8]), abs=1e-5)
+                assert float(tmp_line1[9]) == pytest.approx(float(tmp_line2[9]), abs=1e-5)
