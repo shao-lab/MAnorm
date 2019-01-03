@@ -1,7 +1,7 @@
 MAnorm
 ======
 
-|travis-ci| |Documentation Status| |pypi| |install with bioconda| |license|
+|travis-ci| |Documentation Status| |pypi| |install with bioconda| |codecov| |license|
 
 .. |travis-ci| image:: https://travis-ci.org/shao-lab/MAnorm.svg?branch=master
    :target: https://travis-ci.org/shao-lab/MAnorm
@@ -11,6 +11,8 @@ MAnorm
    :target: https://pypi.python.org/pypi/MAnorm
 .. |install with bioconda| image:: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square
    :target: http://bioconda.github.io/recipes/manorm/README.html
+.. |codecov| image:: https://codecov.io/gh/shao-lab/MAnorm/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/shao-lab/MAnorm
 .. |license| image:: https://img.shields.io/pypi/l/MAnorm.svg
    :target: https://github.com/shao-lab/MAnorm/blob/master/LICENSE
 
@@ -74,7 +76,7 @@ Basic Usage
 ::
 
     $ manorm --p1 sample1_peaks.bed --p2 sample2_peaks.bed --r1 sample1_reads.bed --r2 sample2_reads.bed
-    --n1 name1 --n2 name2 --dir sample1_vs_sample2
+    --n1 name1 --n2 name2 -o output_dir
 
 **Note:** Using -h/--help for the details of all arguments.
 
