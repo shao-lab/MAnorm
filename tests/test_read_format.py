@@ -6,12 +6,6 @@ from manorm.exceptions import InvalidFormatError, UnmatchedBedFormatError, Unsup
 from manorm.read import load_reads
 
 
-@pytest.fixture
-def data_dir():
-    """Return the directory of data files."""
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-
-
 def test_matched_bed(data_dir):
     with pytest.raises(UnmatchedBedFormatError):
         reads = load_reads(os.path.join(data_dir, 'test_reads.bed'), format='bed', paired=True)

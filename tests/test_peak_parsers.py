@@ -1,14 +1,6 @@
 import os
 
-import pytest
-
 from manorm.peak import load_peaks
-
-
-@pytest.fixture
-def data_dir(tmpdir):
-    """Return the directory of data files."""
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 
 def test_bed(data_dir):
