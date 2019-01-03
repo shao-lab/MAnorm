@@ -27,7 +27,7 @@ MAnorm provides a console script ``manorm`` for running the program, the basic u
 .. code-block:: shell
 
   $ manorm --p1 peaks_file1.bed --p2 peaks_file2.bed --r1 reads_file1.bed --r2 reads_file2.bed
-  --n1 name1 --n2 name2 --dir output_dir
+  --n1 name1 --n2 name2 -o output_dir
 
 .. tip::
     Please use ``-h/--help`` for the details of all options.
@@ -53,8 +53,8 @@ Options
 --n-random           Number of simulations to test the enrichment of peaks overlap between two samples.
 -m, --m-cutoff       Absolute *M* value (*log*:sub:`2`-ratio) cutoff to define biased (differential binding) peaks.
 -p, --p-cutoff       *P* value cutoff to define biased peaks.
---oa, --output-all   Output additional files which contains the results of original (unmerged) peaks.
---dir                **[Required]** Output directory.
+--wa, --write-all   Output additional files which contains the results of original (unmerged) peaks.
+-o                  **[Required]** Output directory.
 --verbose            Enable verbose log messages.
 
 **Detailed explanation on options:**
@@ -94,7 +94,7 @@ Options
     This option is used to exclude common peaks that only overlap on the edge of each other.
     Default: ``-w/--window-size``/4
 
-  * ``--oa/--output-all``:
+  * ``--wa/--write-all``:
 
     By default, MAnorm only write the comparison results of unique and merged common peaks in a single
     output file. With this option on, MAnorm will write two extra files which contains the results of

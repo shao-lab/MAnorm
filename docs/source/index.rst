@@ -15,6 +15,9 @@ Welcome to MAnorm
 .. image:: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square
    :alt: Bioconda
    :target: http://bioconda.github.io/recipes/manorm/README.html
+.. image:: https://codecov.io/gh/shao-lab/MAnorm/branch/master/graph/badge.svg
+   :alt: Codecov
+   :target: https://codecov.io/gh/shao-lab/MAnorm
 .. image:: https://img.shields.io/pypi/l/MAnorm.svg
    :alt: License
    :target: https://github.com/shao-lab/MAnorm/blob/master/LICENSE
