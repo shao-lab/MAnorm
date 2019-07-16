@@ -43,7 +43,7 @@ ChIP-Seq data sets. Genome biology. 2012 Mar 16;13(3):R16.
 Documentation
 -------------
 
-To see the full documentation of MAnorm, please refer to: http://manorm.readthedocs.io/en/latest/
+To see the full documentation of MAnorm, please refer to: http://manorm.readthedocs.io
 
 Installation
 ------------
