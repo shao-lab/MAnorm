@@ -18,17 +18,16 @@ and we are sorry for that.
 The Python version I use is not the same as MAnorm requires
 -----------------------------------------------------------
 
-MAnorm requires Python 2.7 or Python 3.4+, which covering most of popular versions in the community.
-If you are not using these versions, it is recommended to create a separated Python environment with
-`virtualenv`_ or `conda`_.
+MAnorm requires Python 3.6+. If you are not using these versions, it is recommended to
+create a separated Python environment with `virtualenv`_ or `conda`_.
 
 
 Can I use MAnorm to analyze samples with replicates?
 ----------------------------------------------------
 
 Basically, MAnorm is designed to normalize samples with only **1** replicate for each condition.
-And a more complicated statistic model MAnorm2, which can capture the variation among replicates,
-is under development. If you have multiple samples for each condition, please use MAnorm2.
+And a more complicated statistic model `MAnorm2`_, which can capture the variation among replicates.
+If you have multiple samples for each condition, please use `MAnorm2`_.
 
 The format of my peak/read file is not supported by MAnorm
 ----------------------------------------------------------
@@ -48,12 +47,13 @@ I am confused about P values in MAnorm
 --------------------------------------
 
 The P value that MAnorm gives is not the strict *p-value* in statistics which shows the probability of
-obtaining a result equal to or more extreme than the observed data when the null hypothesis is true.
+obtaining a result which equals to or is more extreme than the observation when the null hypothesis is true.
 Instead, it is a conditional probability which technically tells how likely it is to observe *x* reads
-in sample 1 and *y* reads in sample 2 on a peak region.
+in sample 1 and *y* reads in sample 2 on a peak region given the sum of *x+y*.
 For more information, please refer to the manuscript of MAnorm.
 
 .. _pysam: https://pypi.org/project/pysam/
 .. _virtualenv: https://pypi.org/project/virtualenv/
 .. _conda: https://conda.io
+.. _MAnorm2: https://github.com/tushiqi/MAnorm2
 .. _issue: https://github.com/shao-lab/MAnorm/issues

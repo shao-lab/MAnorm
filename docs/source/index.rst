@@ -88,4 +88,4 @@ CAS`_.
    GitHub repository of MAnorm: https://github.com/shao-lab/MAnorm
 
 .. _ShaoLab: http://bioinfo.sibs.ac.cn/shaolab/
-.. _CAS-MPG Partner Institute for Computational Biology, SIBS, CAS: http://www.picb.ac.cn/picb/indexeng.jsp
+.. _CAS-MPG Partner Institute for Computational Biology, SIBS, CAS: http://www.picb.ac.cn/
