@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+v1.3.0 (2020-03-xx)
+-------------------
+
+* Drop support for python versions under 3.6
+* Support broadPeak format
+* Refactor for better compatbility with MotifScan and MAmotif
+
 v1.2.0 (2019-01-03)
 -------------------
 
