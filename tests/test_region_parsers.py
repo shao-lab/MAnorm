@@ -1,11 +1,12 @@
 import os
 
-from manorm.peak import load_peaks
+from manorm.region import load_manorm_peaks
 
 
-def test_bed(data_dir):
-    peaks = load_peaks(os.path.join(data_dir, 'test_peaks.bed'), format='bed')
-    assert sorted(peaks.chroms) == ['chr1', 'chr2', 'chr9']
+def test_bed_parser(data_dir):
+    peaks = load_manorm_peaks(os.path.join(data_dir, 'test_peaks.bed'),
+                              format='bed')
+    assert peaks.chroms == ['chr1', 'chr2', 'chr9']
     assert peaks.size == 4
     assert peaks.fetch('chr1')[0].start == 1
     assert peaks.fetch('chr1')[0].end == 100
@@ -21,26 +22,28 @@ def test_bed(data_dir):
     assert peaks.fetch('chr9')[0].summit == 64
 
 
-def test_bed_summit(data_dir):
-    peaks = load_peaks(os.path.join(data_dir, 'test_peaks_summit.bed'), format='bed-summit')
+def test_bed3_summit_parser(data_dir):
+    peaks = load_manorm_peaks(os.path.join(data_dir, 'test_peaks_summit.bed'),
+                              format='bed3-summit')
     assert sorted(peaks.chroms) == ['chr1', 'chr2', 'chr9']
     assert peaks.size == 4
     assert peaks.fetch('chr1')[0].start == 1
     assert peaks.fetch('chr1')[0].end == 100
-    assert peaks.fetch('chr1')[0].summit == 51
+    assert peaks.fetch('chr1')[0].summit == 50
     assert peaks.fetch('chr1')[1].start == 2
     assert peaks.fetch('chr1')[1].end == 200
-    assert peaks.fetch('chr1')[1].summit == 102
+    assert peaks.fetch('chr1')[1].summit == 100
     assert peaks.fetch('chr2')[0].start == 1
     assert peaks.fetch('chr2')[0].end == 150
-    assert peaks.fetch('chr2')[0].summit == 3
+    assert peaks.fetch('chr2')[0].summit == 2
     assert peaks.fetch('chr9')[0].start == 5
     assert peaks.fetch('chr9')[0].end == 123
-    assert peaks.fetch('chr9')[0].summit == 60
+    assert peaks.fetch('chr9')[0].summit == 55
 
 
-def test_macs(data_dir):
-    peaks = load_peaks(os.path.join(data_dir, 'test_peaks_macs.xls'), format='macs')
+def test_macs_parser(data_dir):
+    peaks = load_manorm_peaks(os.path.join(data_dir, 'test_peaks_macs.xls'),
+                              format='macs')
     assert sorted(peaks.chroms) == ['chr1', 'chr2', 'chr22']
     assert peaks.size == 9
     assert peaks.fetch('chr1')[0].start == 16192292
@@ -57,8 +60,9 @@ def test_macs(data_dir):
     assert peaks.fetch('chr22')[0].summit == 17565935
 
 
-def test_macs2(data_dir):
-    peaks = load_peaks(os.path.join(data_dir, 'test_peaks_macs2.xls'), format='macs2')
+def test_macs2_parser(data_dir):
+    peaks = load_manorm_peaks(os.path.join(data_dir, 'test_peaks_macs2.xls'),
+                              format='macs2')
     assert sorted(peaks.chroms) == ['chr1', 'chr2', 'chr22']
     assert peaks.size == 10
     assert peaks.fetch('chr1')[0].start == 569795
@@ -75,8 +79,9 @@ def test_macs2(data_dir):
     assert peaks.fetch('chr22')[0].summit == 834280
 
 
-def test_narrowpeak(data_dir):
-    peaks = load_peaks(os.path.join(data_dir, 'test_peaks.narrowPeak'), format='narrowpeak')
+def test_narrowpeak_parser(data_dir):
+    peaks = load_manorm_peaks(os.path.join(data_dir, 'test_peaks.narrowPeak'),
+                              format='narrowpeak')
     assert sorted(peaks.chroms) == ['chr1', 'chr2', 'chr22']
     assert peaks.size == 10
     assert peaks.fetch('chr1')[0].start == 569795
