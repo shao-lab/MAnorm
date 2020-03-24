@@ -7,3 +7,5 @@ dist/
 .tox/
 .coverage
 MAnorm.egg-info/
+__pycache__
+.pytest_cache
