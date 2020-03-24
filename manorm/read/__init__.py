@@ -1,74 +1,92 @@
-# -*- coding: utf-8 -*-
-
 """
 manorm.read
-~~~~~~~~~~~
+-----------
 
-This module contains classes and functions for read-related operations.
+Module for sequencing reads.
 """
 
-from __future__ import absolute_import
-
-import os
 import logging
+import os
 from bisect import bisect_left
 
-from manorm.exceptions import UnmatchedBedFormatError, UnsupportedFormatError
-from manorm.read.parsers import BAMParser, BEDPEParser, BEDParser, SAMParser
+from manorm.exceptions import FormatModeConflictError
+from manorm.read.parsers import get_read_parser
 
 READ_FORMATS = ['bed', 'bedpe', 'sam', 'bam']
-READ_PARSERS = {'bed': BEDParser, 'bedpe': BEDPEParser, 'sam': SAMParser, 'bam': BAMParser}
 
 logger = logging.getLogger(__name__)
 
 
-class Reads(object):
-    """Class for reads generated from next-generation sequencing."""
+class Reads:
+    """Class for reads generated from next-generation sequencing.
+
+    Parameters
+    ----------
+    name : str, optional
+        The sample name of the sequencing reads.
+
+    Attributes
+    ----------
+    name : str or None
+        The sample name of the sequencing reads.
+    """
 
     def __init__(self, name=None):
-        """Initialize the read set.
-
-        :param name: The name of the read set.
-        """
         self.name = name
-        self.data = {}
+        self._data = {}
 
     @property
     def chroms(self):
-        """Return the chromosome names of reads."""
-        return list(self.data.keys())
+        """Returns sorted chromosome names of the sequencing reads.
+
+        Returns
+        -------
+        list of str
+            Chromosome names (sorted) of the sequencing reads.
+        """
+        return sorted(self._data.keys())
 
     @property
     def size(self):
-        """Return the number of reads."""
-        return sum(len(self.data[chrom]) for chrom in self.chroms)
+        """Returns the number of sequencing reads."""
+        return sum(len(value) for value in self._data.values())
 
     def add(self, chrom, pos):
-        """Add a read.
+        """Add a read position.
 
-        :param chrom: The chromosome name of the read.
-        :param pos: The representative genomic position of the read.
+        Parameters
+        ----------
+        chrom : str
+            The chromosome name of the read.
+        pos : int
+            The representative genomic position of the read.
         """
-        self.data.setdefault(chrom, [])
-        self.data[chrom].append(pos)
+        self._data.setdefault(chrom, [])
+        self._data[chrom].append(pos)
 
     def sort(self):
         """Sort reads."""
         for chrom in self.chroms:
-            self.data[chrom].sort()
+            self._data[chrom].sort()
 
     def count(self, chrom, start, end):
-        """Count reads in given interval by binary search.
+        """Count reads located in the given interval by binary search.
 
-        :param chrom: The chromosome name of the interval.
-        :param start: The start pos of the interval.
-        :param end: The end pos of the interval.
+        Parameters
+        ----------
+        chrom : str
+            The chromosome name of the interval.
+        start : int
+            The start pos of the interval.
+        end : int
+            The end pos of the interval.
         """
         if start >= end:
-            raise ValueError("start must be < end.")
+            raise ValueError(
+                f"expect start < end, got: start={start} end={end}")
         try:
-            head = bisect_left(self.data[chrom], start)
-            tail = bisect_left(self.data[chrom], end)
+            head = bisect_left(self._data[chrom], start)
+            tail = bisect_left(self._data[chrom], end)
             return tail - head
         except KeyError:
             return 0
@@ -77,27 +95,35 @@ class Reads(object):
 def load_reads(path, format='bed', paired=False, shift=100, name=None):
     """Read reads from file.
 
-    :param path: The file path to read reads from.
-    :param format: Format of reads file.
-    :param paired: Paired-end mode or not.
-    :param shift: Shift size of single-end reads.
-    :param name: Name of reads.
+    Parameters
+    ----------
+    path : str
+        Path to load the reads.
+    format : str, optional
+        File format, default='bed'.
+    paired : bool, optional
+        Whether the reads are paired-end or not, default=False.
+    shift : int, optional
+        Shift size for single-end reads, default=100.
+    name : str, optional
+        Sample name. If not specified, the basename of the file will be used.
+
+    Returns
+    -------
+    reads : `Reads`
+        Loaded sequencing reads.
     """
-    logger.debug("Loading reads from {}".format(path))
-    if paired and format == 'bed':
-        raise UnmatchedBedFormatError
-    if not paired and format == 'bedpe':
-        raise UnmatchedBedFormatError
+    logger.info(f"Loading reads from {path} [{format}]")
+    if format == 'bed' and paired:
+        raise FormatModeConflictError('bed', 'paired-end')
+    if format == 'bedpe' and not paired:
+        raise FormatModeConflictError('bedpe', 'single-end')
     if name is None:
         name = os.path.splitext(os.path.basename(path))[0]
     reads = Reads(name=name)
-    try:
-        read_parser = READ_PARSERS[format](path)
-    except KeyError:
-        raise UnsupportedFormatError(format=format)
-    for chrom, pos in read_parser.parse(paired=paired, shift=shift):
+    parser = get_read_parser(format)(path)
+    for chrom, pos in parser.parse(paired=paired, shift=shift):
         reads.add(chrom, pos)
-    read_parser.close()
     reads.sort()
-    logger.debug("Loaded {:,} reads".format(reads.size))
+    logger.info(f"Loaded {reads.size:,} reads")
     return reads
