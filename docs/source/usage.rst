@@ -230,7 +230,7 @@ scaling relationship between two samples.
 - <name1>_vs_<name2>_MA_plot_with_P_value.pdf
 
 .. _BED: https://genome.ucsc.edu/FAQ/FAQformat.html#format1
-.. _MACS: http://liulab.dfci.harvard.edu/MACS/README.html
+.. _MACS: https://github.com/taoliu/MACS
 .. _MACS2: https://github.com/taoliu/MACS
 .. _narrowPeak: https://genome.ucsc.edu/FAQ/FAQformat.html#format12
 .. _broadPeak: https://genome.ucsc.edu/FAQ/FAQformat.html#format13
