@@ -31,7 +31,7 @@ jobs:
         pip install -U tox
     - name: Test with tox
       run: |
-        tox -e py,codecov
+        tox -e py
 
   docs:
     runs-on: ubuntu-latest
