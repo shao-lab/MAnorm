@@ -21,14 +21,12 @@ def overlap_on_same_chrom(regions1, regions2):
     """
     overlap_flag1 = np.zeros(len(regions1), dtype=bool)
     overlap_flag2 = np.zeros(len(regions2), dtype=bool)
-    starts = np.array([region.start for region in regions2])
-    ends = np.array([region.end for region in regions2])
-    for idx, region in enumerate(regions1):
-        product = (region.end - starts) * (ends - region.start)
-        overlap_idx = product > 0
-        if sum(overlap_idx) > 0:
-            overlap_flag1[idx] = True
-            overlap_flag2[overlap_idx] = True
+    for i, region_i in enumerate(regions1):
+        for j, region_j in enumerate(regions2):
+            if (region_i.end - region_j.start) * (
+                    region_j.end - region_i.start) > 0:
+                overlap_flag1[i] = True
+                overlap_flag2[j] = True
     return overlap_flag1, overlap_flag2
 
 
@@ -54,6 +52,7 @@ def merge_common_peaks(peaks1, peaks2):
     """Merge common (overlapping) peaks of the specified peak sets and
     returns the merged peaks.
     """
+
     def _merge_peak(chrom, start, end, summits):
         # take the middle of two nearest neighbour peaks as new summit
         summits.sort()
