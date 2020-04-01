@@ -21,7 +21,6 @@ with open(os.path.join(pkg_dir, 'README.rst')) as fin:
 
 
 install_requires = [
-    "setuptools",
     "numpy",
     "pysam>=0.15.0",
     "matplotlib>=3.0.0",
@@ -29,9 +28,9 @@ install_requires = [
 ]
 
 extras_require = {
-    "test": ["pytest >= 3.0.0",
-             "pytest-cov >= 2.6.0"],
-    "docs": ["sphinx >= 1.8.0",
+    "test": ["pytest >= 4.0.0",
+             "pytest-cov >= 2.8.0"],
+    "docs": ["sphinx >= 2.0.0",
              "sphinx_rtd_theme"]
 }
 
