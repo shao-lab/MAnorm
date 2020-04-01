@@ -1,10 +1,10 @@
 MAnorm
 ======
 
-|travis-ci| |Documentation Status| |pypi| |install with bioconda| |codecov| |license|
+|github-actions| |Documentation Status| |pypi| |install with bioconda| |codecov| |license|
 
-.. |travis-ci| image:: https://travis-ci.org/shao-lab/MAnorm.svg?branch=master
-   :target: https://travis-ci.org/shao-lab/MAnorm
+.. |github-actions| image:: https://github.com/shao-lab/MAnorm/workflows/Python%20package/badge.svg
+   :target: https://github.com/shao-lab/MAnorm/actions
 .. |Documentation Status| image:: https://readthedocs.org/projects/manorm/badge/?version=latest
    :target: http://manorm.readthedocs.io/en/latest/?badge=latest
 .. |pypi| image:: https://img.shields.io/pypi/v/MAnorm.svg
