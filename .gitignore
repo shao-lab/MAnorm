@@ -6,6 +6,8 @@ dist/
 *.pyc
 .tox/
 .coverage
+coverage.*
+htmlcov/
 MAnorm.egg-info/
 __pycache__
 .pytest_cache
