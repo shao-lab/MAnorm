@@ -7,9 +7,9 @@ MAnorm is written in Python and supports Python 3.6+. It can be obtained easily 
 PyPI_ or Bioconda_, the commands below show how to install the latest release of MAnorm.
 
 .. warning::
-    Starting from v1.2.0, MAnorm no longer support Window platform.
+    Starting from v1.2.0, MAnorm no longer support Windows platform.
 .. warning::
-    Starting from v1.3.0, MAnorm drops support for versions below Python 3.6.
+    Starting from v1.3.0, MAnorm drops support for Python versions below 3.6.
 
 
 Install from PyPI

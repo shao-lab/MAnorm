@@ -13,7 +13,7 @@ I can not install/run MAnorm on Windows
 
 Starting from version 1.2.0, MAnorm does not support Windows any more. This is because MAnorm uses
 `pysam`_ as a dependency to parse SAM/BAM files. There may be some compiling issues with Windows
-and we are sorry for that.
+and we are sorry about that.
 
 The Python version I use is not the same as MAnorm requires
 -----------------------------------------------------------
@@ -25,8 +25,8 @@ create a separated Python environment with `virtualenv`_ or `conda`_.
 Can I use MAnorm to analyze samples with replicates?
 ----------------------------------------------------
 
-Basically, MAnorm is designed to normalize samples with only **1** replicate for each condition.
-And a more complicated statistic model `MAnorm2`_, which can capture the variation among replicates.
+Basically, MAnorm is designed to normalize samples without replicates for each condition.
+And a more complicated statistic model `MAnorm2`_ is designed to capture the variation among replicates.
 If you have multiple samples for each condition, please use `MAnorm2`_.
 
 The format of my peak/read file is not supported by MAnorm
@@ -46,7 +46,7 @@ region. And the *A* value is the averaged read density of two ChIP-seq samples u
 I am confused about P values in MAnorm
 --------------------------------------
 
-The P value that MAnorm gives is not the strict *p-value* in statistics which shows the probability of
+The P value that MAnorm gives is not a strict *p-value* in statistics which shows the probability of
 obtaining a result which equals to or is more extreme than the observation when the null hypothesis is true.
 Instead, it is a conditional probability which technically tells how likely it is to observe *x* reads
 in sample 1 and *y* reads in sample 2 on a peak region given the sum of *x+y*.

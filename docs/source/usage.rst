@@ -77,7 +77,7 @@ Options
 
     These values are used to shift **single-end** reads towards 3' direction and the 5' end of each
     shifted read is used to represent the genomic locus of underlying DNA fragment. Set to half
-    of DNA fragment size of the ChIP-seq library. These options are disabled in paired-end mode.
+    of the DNA fragment size of your ChIP-seq library. These options are disabled in paired-end mode.
 
   * ``--pe/--paired-end``:
 
@@ -99,7 +99,7 @@ Options
 
     By default, MAnorm only write the comparison results of unique and merged common peaks in a single
     output file. With this option on, MAnorm will write two extra files which contains the results of
-    the original(unmerged) peaks.
+    the original (unmerged) peaks.
 
 
 Input File Format
@@ -113,36 +113,41 @@ Format of peak files
 BED
 ^^^
 
-Standard `BED`_ format is supported, the first 3 columns (``chrom``, ``start``, ``end``) of the bed file are used.
+Standard `BED`_ format is supported, the first 3 columns ``chrom``, ``start``, ``end`` are used.
 
 BED3-summit
 ^^^^^^^^^^^
 
-A customized BED format named as ``BED3-summit`` is also supported, the first 3 columns is same as ``BED`` format,
-but the 4th columns should be the ``summit`` position (**absolute** position).
+A customized BED format named as ``BED3-summit`` is also supported, the first 3 columns is the same as
+``BED`` format, and the 4th columns should be the absolute ``summit`` position.
+
+.. note:: This is not a standard format but a variant of ``BED3`` for convenience.
 
 MACS
 ^^^^
 
-`MACS`_ xls format is supported, MAnorm uses the ``chrom``, ``start``, ``end`` and ``summit`` information.
+`MACS`_ (version 1.x) xls format is supported, MAnorm uses the ``chrom``, ``start``, ``end`` and ``summit`` fields.
 
 MACS2
 ^^^^^
 
-`MACS2`_ xls format is supported, MAnorm uses the ``chrom``, ``start``, ``end`` and ``summit`` information.
+`MACS2`_ xls format is supported, MAnorm uses the ``chrom``, ``start``, ``end`` and ``summit`` fields.
+
+.. warning:: This is not compatible with the broad mode of MACS2.
 
 narrowPeak
 ^^^^^^^^^^
 
-ENCODE `narrowPeak`_ format is supported, the first 3 columns (``chrom``, ``start``, ``end``) are used and if
-the 10th column is available, MAnorm uses it as the ``summit`` coordinate.
+ENCODE `narrowPeak`_ format is supported, the first 3 columns ``chrom``, ``start``, ``end`` are used
+and if the 10th column is available, MAnorm uses it as the ``summit`` coordinate.
 
 broadPeak
 ^^^^^^^^^^
 
 ENCODE `broadPeak`_ format is supported, the first 3 columns (``chrom``, ``start``, ``end``) are used.
-Be careful to run MAnorm with broad peaks if the peaks span a long range, and it is recomended to split
-a broad peak into several small peaks for running MAnorm.
+
+.. warning:: Be careful to run MAnorm with broad peaks if the peaks span a long range, and
+             it is recomended to split it into several small peaks for running MAnorm.
 
 
 .. _`read file formats`:
@@ -150,23 +155,23 @@ a broad peak into several small peaks for running MAnorm.
 Format of read files
 --------------------
 
-.. note:: MAnorm does not excluded any duplicated reads, and you may need use other tools to remove
-          duplicates in advance to if you want.
+.. note:: MAnorm does not provide any reads filtering steps, and you have to remove
+          duplicates in advance if you want so.
 
 BED format
 ^^^^^^^^^^
 
-.. note:: BED format can only be used in **single-end** mode.
-
 Standard `BED`_ format is supported.
+
+.. note:: BED format can only be used in **single-end** mode.
 
 BEDPE format
 ^^^^^^^^^^^^
 
-.. note:: BEDPE format can only be used in **paired-end** mode.
-
 `BEDPE`_ format which is defined by `bedtools`_ is also supported. Paired reads with
 both ends mapped to a same chromosome are counted.
+
+.. note:: BEDPE format can only be used in **paired-end** mode.
 
 SAM/BAM format
 ^^^^^^^^^^^^^^
@@ -200,7 +205,7 @@ read densities of each peak, common peaks from two samples are merged together.
 
 .. note::
     If `--wa` option is specified, MAnorm will write two extra xls files containing the results
-    of original(unmerged) peaks. The columns are the same as above.
+    of original (unmerged) peaks. The columns are the same as above.
 
 2. output_filters/
 
@@ -212,8 +217,8 @@ This folder contains the filtered biased/unbiased peaks in BED format.
 
 3. output_tracks/
 
-These files are genome track files of M values, A values and P values in ``wig`` format,
-you can upload these files to a genome browser to visualize them.
+These files are genome track files for M values, A values and P values in ``wiggle`` format,
+you can load these files into a genome browser for visualization.
 
   - <name1>_vs_<name2>_M_values.wig
   - <name1>_vs_<name2>_A_values.wig

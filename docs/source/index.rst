@@ -3,9 +3,9 @@
 Welcome to MAnorm
 =================
 
-.. image:: https://travis-ci.org/shao-lab/MAnorm.svg?branch=master
-   :alt: Travis Build
-   :target: https://travis-ci.org/shao-lab/MAnorm
+.. image:: https://github.com/shao-lab/MAnorm/workflows/Python%20package/badge.svg
+   :alt: Github Actions
+   :target: https://github.com/shao-lab/MAnorm/actions
 .. image:: https://readthedocs.org/projects/manorm/badge/?version=latest
    :alt: Documentation Status
    :target: http://manorm.readthedocs.io/en/latest/?badge=latest
@@ -30,7 +30,7 @@ or epigenetic modifications and you can use it for:
 
 - Normalization of two ChIP-seq samples
 - Quantitative comparison (differential analysis) of two ChIP-seq samples
-- Evaluating the overlap enrichment of the protein binding sites(peaks)
+- Evaluating the overlap enrichment of the protein binding sites (peaks)
 - Elucidating underlying mechanisms of cell-type specific gene regulation
 
 
@@ -73,7 +73,6 @@ Contents
    Home<self>
    install
    usage
-   tutorial
    changelog
    faq
    help
