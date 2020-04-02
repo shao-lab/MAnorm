@@ -3,10 +3,24 @@ from argparse import Namespace
 
 import pytest
 
-from manorm.cli import run
+from manorm.cli import configure_parser, preprocess_args, run
 
 
-def test_manorm(data_dir, tmp_dir):
+def test_configure_parser(data_dir):
+    parser = configure_parser()
+    args = parser.parse_args(
+        ["--p1", os.path.join(data_dir, 'H1hescH3k4me3Rep1_peaks.xls'),
+         "--p2", os.path.join(data_dir, 'K562H3k4me3Rep1_peaks.xls'),
+         "--r1", os.path.join(data_dir, 'H1hescH3k4me3Rep1_reads.bed'),
+         "--r2", os.path.join(data_dir, 'K562H3k4me3Rep1_reads.bed')])
+    args = preprocess_args(args)
+    assert args.name1 == "H1hescH3k4me3Rep1_peaks"
+    assert args.name2 == "K562H3k4me3Rep1_peaks"
+    assert args.summit_dis_cutoff == args.window_size // 4
+    assert args.output_dir == os.getcwd()
+
+
+def test_run(data_dir, tmp_dir):
     args = Namespace(**dict(
         peak_file1=os.path.join(data_dir, 'H1hescH3k4me3Rep1_peaks.xls'),
         peak_file2=os.path.join(data_dir, 'K562H3k4me3Rep1_peaks.xls'),
