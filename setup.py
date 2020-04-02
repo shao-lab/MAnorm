@@ -28,9 +28,9 @@ install_requires = [
 ]
 
 extras_require = {
-    "test": ["pytest >= 4.0.0",
-             "pytest-cov >= 2.8.0"],
-    "docs": ["sphinx >= 2.0.0",
+    "test": ["pytest>=4.0.0",
+             "pytest-cov>=2.8.0"],
+    "docs": ["sphinx>=2.0.0",
              "sphinx_rtd_theme"]
 }
 
