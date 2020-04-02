@@ -58,7 +58,7 @@ MAnorm is available on Galaxy_, you can incorporate MAnorm into your own Galaxy 
 
 Please search and install MAnorm via the `Galaxy Tool Shed`_.
 
-.. _PyPI: https://pypi.python.org/pypi/MAnorm
+.. _PyPI: https://pypi.org/project/MAnorm/
 .. _Bioconda: https://bioconda.github.io
 .. _conda: https://conda.io
 .. _GitHub: https://github.com/shao-lab/MAnorm

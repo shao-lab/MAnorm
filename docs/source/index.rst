@@ -8,10 +8,13 @@ Welcome to MAnorm
    :target: https://github.com/shao-lab/MAnorm/actions
 .. image:: https://readthedocs.org/projects/manorm/badge/?version=latest
    :alt: Documentation Status
-   :target: http://manorm.readthedocs.io/en/latest/?badge=latest
+   :target: https://manorm.readthedocs.io/en/latest/?badge=latest
 .. image:: https://img.shields.io/pypi/v/MAnorm.svg
    :alt: PyPI
-   :target: https://pypi.python.org/pypi/MAnorm
+   :target: https://pypi.org/project/MAnorm/
+.. image:: https://img.shields.io/pypi/pyversions/MAnorm.svg
+   :alt: Python Version
+   :target: https://pypi.org/project/MAnorm/
 .. image:: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square
    :alt: Bioconda
    :target: http://bioconda.github.io/recipes/manorm/README.html
@@ -87,4 +90,4 @@ CAS`_.
    GitHub repository of MAnorm: https://github.com/shao-lab/MAnorm
 
 .. _ShaoLab: http://bioinfo.sibs.ac.cn/shaolab/
-.. _CAS-MPG Partner Institute for Computational Biology, SIBS, CAS: http://www.picb.ac.cn/
+.. _CAS-MPG Partner Institute for Computational Biology, SIBS, CAS: https://www.picb.ac.cn/

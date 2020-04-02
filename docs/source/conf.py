@@ -173,4 +173,6 @@ texinfo_documents = [
 ]
 
 
-
+linkcheck_ignore = [
+    r"https://github.com/shao-lab/MAnorm/workflows/Python%20package/badge.svg"
+]
