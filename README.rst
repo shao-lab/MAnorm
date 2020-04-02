@@ -1,15 +1,17 @@
 MAnorm
 ======
 
-|github-actions| |Documentation Status| |pypi| |install with bioconda| |codecov| |license|
+|github-actions| |Documentation Status| |pypi| |pyversion| |install with bioconda| |codecov| |license|
 
 .. |github-actions| image:: https://github.com/shao-lab/MAnorm/workflows/Python%20package/badge.svg
    :target: https://github.com/shao-lab/MAnorm/actions
 .. |Documentation Status| image:: https://readthedocs.org/projects/manorm/badge/?version=latest
    :target: http://manorm.readthedocs.io/en/latest/?badge=latest
 .. |pypi| image:: https://img.shields.io/pypi/v/MAnorm.svg
-   :target: https://pypi.python.org/pypi/MAnorm
-.. |install with bioconda| image:: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square
+   :target: https://pypi.org/project/MAnorm/
+.. |pyversion| image:: https://img.shields.io/pypi/pyversions/MAnorm.svg
+   :target: https://pypi.org/project/MAnorm/
+.. |install with bioconda| image:: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg
    :target: http://bioconda.github.io/recipes/manorm/README.html
 .. |codecov| image:: https://codecov.io/gh/shao-lab/MAnorm/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/shao-lab/MAnorm
