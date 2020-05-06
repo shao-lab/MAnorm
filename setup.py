@@ -41,7 +41,7 @@ classifiers = [
     "License :: OSI Approved :: BSD License",
     "Operating System :: Unix",
     "Operating System :: POSIX",
-    "Operating System :: MacOS :: MacOS X"
+    "Operating System :: MacOS :: MacOS X",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.6",
